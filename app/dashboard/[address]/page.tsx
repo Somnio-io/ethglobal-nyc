@@ -1,5 +1,6 @@
 "use client";
 
+import { Separator } from "@/(components)/ui/separator";
 import { CONTENT_URL, ContentKey, Video, transformData } from "@/(lib)/utils";
 import CarouselBase from "@/(components)/carousel/carousel-base";
 import { useEffect, useState } from "react";
