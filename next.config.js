@@ -24,7 +24,7 @@ const Networks = {
 
 const deployedContractAddress = {
   MATIC_MAINNET: "",
-  MATIC_MUMBAI: "",
+  MATIC_MUMBAI: "0x53D877fcFA8C0D38F9551cB0437b42C54DB1D060",
 };
 
 const selectedNetwork = Networks["ETH_MAINNET"];
