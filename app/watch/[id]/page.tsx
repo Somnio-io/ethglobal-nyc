@@ -33,6 +33,7 @@ export default function Page({ params }: { params: { id: string } }) {
   const publisher = searchParams.get("publisher");
 
   useEffect(() => {
+    if (!publisher) return;
     const _fetch = async () => {
       const token = localStorage.getItem("token") || "unauthorized";
 
@@ -43,7 +44,7 @@ export default function Page({ params }: { params: { id: string } }) {
         },
       });
       const jsonUrls = JSON.parse(await data.json());
-      setContractLookup(await lookupConnectedContract(publisher!, token));
+      setContractLookup(await lookupConnectedContract(publisher, token));
 
       if (jsonUrls.presignedUrls.length) {
         const groupedContent = jsonUrls.presignedUrls.reduce((acc: { [key: string]: ContentKey[] }, curr: ContentKey) => {
@@ -60,7 +61,7 @@ export default function Page({ params }: { params: { id: string } }) {
       setLoading(false);
     };
     _fetch();
-  }, []);
+  }, [publisher]);
 
   // TODO check the response
   if (loading && !content.length) {
@@ -99,22 +100,6 @@ export default function Page({ params }: { params: { id: string } }) {
         <div className="col-start-1 col-span-2 justify-between mt-5 ">
           <h3 className="font-semibold capitalize text-wrap mb-1">{video?.name}</h3>
           <p className="text mb-2 underline"> {truncateAddress(video?.publisher!)}</p>
-          {/* {video?.live ? (
-            <IvsPlayer />
-          ) : (
-            <video
-              controls={true}
-              muted={false}
-              autoPlay={true}
-              width={550}
-              height={550}
-              loop={false}
-              playsInline={true}
-              poster={video?.placeholderUrl}
-            >
-              <source src={video?.url} type="video/mp4" />
-            </video>
-          )} */}
 
           <p className="mt-5 text-regular col-start-1 col-span-2 text-wrap">{video?.description}</p>
 

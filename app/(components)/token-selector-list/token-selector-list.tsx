@@ -59,6 +59,7 @@ export function TokenSelectorList({ account }: TokenSelectorListProps) {
   const [loading, setLoading] = useState(true);
   const [selectedTokens, setSelectedTokens] = useState<FormattedSelection>({ contracts: [], tokens: [] });
   const [content, setContent] = useState<FormattedCollection>({});
+  const [saveSelection, setSaveSelection] = useState([[], []]);
 
   useEffect(() => {
     const _fetch = async () => {
@@ -78,20 +79,21 @@ export function TokenSelectorList({ account }: TokenSelectorListProps) {
     _fetch();
   }, []);
 
-  const handleSave = () => {
-    // const { config } = usePrepareContractWrite({
-    //   address: process.env.NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS as `0x${string}`,
-    //   abi: LINKT_ABI,
-    //   functionName: "addUserTokenMapping",
-    // });
+  useEffect(() => {
+    const formatted = Object.entries(content).map((item) => [[item[0]], [item[1].selected]]);
+    setSaveSelection(formatted as any);
+  }, [content]);
 
-    const { data, write } = useContractWrite({
-      enabled: false,
-      address: process.env.NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS as `0x${string}`,
-      abi: LINKT_ABI,
-      functionName: "addUserTokenMapping",
-    });
-    write();
+  const { data, write } = useContractWrite({
+    address: process.env.NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS as `0x${string}`,
+    abi: LINKT_ABI,
+    functionName: "addUserTokenMapping",
+    args: saveSelection[0],
+  });
+
+  const handleSave = () => {
+    console.log(saveSelection[0]);
+    write?.();
   };
 
   useContractRead({
@@ -159,7 +161,9 @@ export function TokenSelectorList({ account }: TokenSelectorListProps) {
             ))
           : null}
       </div>
-      <button className="mt-5 border border-white h-[50px]">SAVE</button>
+      <button className="mt-5 border border-white h-[50px]" onClick={() => handleSave()}>
+        SAVE
+      </button>
     </>
   );
 }
