@@ -46,5 +46,51 @@ export class BackendStack extends cdk.Stack {
       partitionKey: { name: "address", type: AttributeType.STRING },
       billingMode: BillingMode.PAY_PER_REQUEST,
     });
+
+    userTable.addGlobalSecondaryIndex({
+      indexName: "byConnectedContract",
+      partitionKey: { name: "connectedContract", type: AttributeType.STRING },
+    });
+    userTable.addGlobalSecondaryIndex({
+      indexName: "byLiveId",
+      partitionKey: { name: "liveId", type: AttributeType.STRING },
+    });
+
+    const likesTable = new Table(this, "LikesTable", {
+      partitionKey: { name: "videoId", type: AttributeType.STRING },
+      billingMode: BillingMode.PAY_PER_REQUEST,
+    });
+
+    const handleLikeFunction = new NodejsFunction(this, `handleLikeFunction`, {
+      entry: path.resolve(__dirname, "../src/handlers/handleLike.ts"),
+      handler: "handleLike",
+      memorySize: 512,
+      environment: {
+        LIKES_TABLE_NAME: likesTable.tableName,
+        USERS_TABLE_NAME: userTable.tableName,
+      },
+      runtime: Runtime.NODEJS_18_X,
+      timeout: cdk.Duration.seconds(6),
+      bundling: {
+        target: "es2020",
+      },
+    });
+    likesTable.grantReadWriteData(handleLikeFunction);
+    userTable.grantReadData(handleLikeFunction);
+
+    const handleFetchUserFunction = new NodejsFunction(this, `handleFetchUserFunction`, {
+      entry: path.resolve(__dirname, "../src/handlers/fetchUser.ts"),
+      handler: "fetchUser",
+      memorySize: 512,
+      environment: {
+        USERS_TABLE_NAME: userTable.tableName,
+      },
+      runtime: Runtime.NODEJS_18_X,
+      timeout: cdk.Duration.seconds(15),
+      bundling: {
+        target: "es2020",
+      },
+    });
+    userTable.grantReadData(handleFetchUserFunction);
   }
 }
