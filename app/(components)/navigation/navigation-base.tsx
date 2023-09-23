@@ -5,6 +5,7 @@ import { GearIcon, HomeIcon, DashboardIcon, UploadIcon, EnterIcon, ExitIcon, Plu
 import { useAuthContext } from "@/(context)/AuthContext";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Popover, PopoverContent, PopoverTrigger } from "@/(components)/ui/popover";
 
 function NavigationBase() {
   const router = useRouter();
@@ -89,8 +90,53 @@ function NavigationBase() {
           {isAuthed ? <ExitIcon className="h-6 w-6" /> : <EnterIcon className="h-6 w-6" />}
         </button>
       </div>
+      <div ref={menuRef} className="bg-primary rounded-full items-center left-1/2 absolute bottom-full space-y-1 transform -translate-x-1/2">
+        <Popover>
+          <PopoverTrigger asChild>
+            <button
+              ref={buttonRef}
+              disabled={!isAuthed}
+              aria-disabled={!isAuthed}
+              onClick={() => setShowButtons(!showButtons)}
+              aria-expanded={showButtons}
+              aria-label="Toggle additional options"
+              className={`p-1 hover:bg-primary/90  flex items-center rounded-full z-60 ${isAuthed}? "opacity-100 cursor-pointer":"opacity-50 cursor-not-allowed"`}
+            >
+              <PlusCircledIcon className="h-8 w-8 bg-primary rounded-full  border-primary" />
+            </button>
+          </PopoverTrigger>
 
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-full flex justify-center z-50">
+          <PopoverContent className="flex flex-col bg-primary stroke-0">
+            <Link href={`/dashboard/${account}/upload`} legacyBehavior passHref>
+              <a aria-label="Upload" className={`p-2 flex  ${isAuthed ? "cursor-pointer" : "cursor-not-allowed"}`} aria-disabled={!isAuthed}>
+                <UploadIcon className="h-6 w-6 ml-4" />
+                <label className="text-small">Upload</label>
+              </a>
+            </Link>
+            <Link href={`/dashboard/${account}/live`} legacyBehavior passHref>
+              <a
+                aria-label="Go Live"
+                className={` hover:bg-primary/90  p-2 flex  w-full  items-center  ${isAuthed ? "cursor-pointer" : "cursor-not-allowed"} `}
+                aria-disabled={!isAuthed}
+              >
+                <svg className="h-6 w-6 ml-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M22 8L16 12L22 16V8Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <path
+                    d="M14 6H4C2.89543 6 2 6.89543 2 8V16C2 17.1046 2.89543 18 4 18H14C15.1046 18 16 17.1046 16 16V8C16 6.89543 15.1046 6 14 6Z"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <label className="text-small">Go Live</label>
+              </a>
+            </Link>
+          </PopoverContent>
+        </Popover>
+      </div>
+
+      {/* <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-full flex justify-center z-50">
         <div className="relative">
           <button
             ref={buttonRef}
@@ -103,6 +149,8 @@ function NavigationBase() {
           >
             <PlusCircledIcon className="h-8 w-8 bg-primary rounded-full border-2 border-primary" />
           </button>
+
+
 
           <div
             ref={menuRef}
@@ -141,7 +189,7 @@ function NavigationBase() {
             </Link>
           </div>
         </div>
-      </div>
+      </div> */}
     </nav>
   );
 }
