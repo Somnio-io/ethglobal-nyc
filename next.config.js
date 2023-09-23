@@ -39,7 +39,7 @@ const nextConfig = {
   env: {
     FEATURE_QUICKNODE_ENDPOINT: currentNodeEndpoint,
     FEATURE_ENABLE_GASLESS_TRANSACTIONS: false, // https://ethglobal.com/events/newyork2023/prizes#biconomy
-    FEATURE_TARGET_NETWORK: Networks["ETH_MAINNET"],
+    FEATURE_TARGET_NETWORK: Networks["MATIC_MAINNET"],
     FEATURE_ENABLE_QUICKNODE: false, // https://ethglobal.com/events/newyork2023/prizes/quicknode-64ekr
     FEATURE_ENABLE_ALCHEMY: false, // No bounty - but required for access to many chains ERC721 data
     FEATURE_ENABLE_AIRSTACK: true, // https://ethglobal.com/events/newyork2023/prizes#airstack
