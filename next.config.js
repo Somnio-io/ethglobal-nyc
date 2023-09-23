@@ -27,14 +27,17 @@ const deployedContractAddress = {
   MATIC_MUMBAI: "0x53D877fcFA8C0D38F9551cB0437b42C54DB1D060",
 };
 
-const selectedNetwork = Networks["ETH_MAINNET"];
+const deployedContract = "0x53D877fcFA8C0D38F9551cB0437b42C54DB1D060";
+const currentNodeEndpoint = "";
+
+console.log(`Contract is -> ${deployedContract}`);
+console.log(`Endpoint is -> ${currentNodeEndpoint}`);
 
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   env: {
-    FEATURE_QUICKNODE_ENDPOINT: process.env[`FEATURE_QUICKNODE_ENDPOINT_${selectedNetwork}`],
-    FEATURE_TARGET_NETWORK: selectedNetwork,
+    FEATURE_QUICKNODE_ENDPOINT: currentNodeEndpoint,
     FEATURE_ENABLE_GASLESS_TRANSACTIONS: false, // https://ethglobal.com/events/newyork2023/prizes#biconomy
 
     FEATURE_ENABLE_QUICKNODE: false, // https://ethglobal.com/events/newyork2023/prizes/quicknode-64ekr
@@ -43,7 +46,7 @@ const nextConfig = {
 
     FEATURE_ENABLE_TIPPING_TOKEN: false, // https://ethglobal.com/events/newyork2023/prizes/apecoin-dao-mu0vz
     FEATURE_ENABLE_TIPPING_TOKEN_ADDRESS: "", // What token will be used for tipping? -> https://ethglobal.com/events/newyork2023/prizes/apecoin-dao-mu0vz - https://ethglobal.com/events/newyork2023/prizes/aave-grants-dao-ac2mc
-    FEATURE_DEPLOYED_CONTRACT_ADDRESS: deployedContractAddress[selectedNetwork],
+    NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS: deployedContract,
 
     FEATURE_ENABLE_STREAMING_ENDPOINT: "rtmps://b9e19e28061f.global-contribute.live-video.net:443/app/",
   },

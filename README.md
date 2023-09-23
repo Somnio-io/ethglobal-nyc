@@ -26,6 +26,7 @@ When thinking of how to best build Linkt.tv we wanted to ensure we stood on the 
 
 - https://jims-trading.metafuse.me/ (owner -> 0x4c3c64dA062a4Ace3C7e1c0201f7A54cBA4718d3)
 - https://onlyfrens.metafuse.me/ (owner -> 0x5664A51EcA6a9FdD0207487607F86E79dbe9b348)
+- https://exclusive-content.metafuse.me/ (owner -> 0x8c8117d3e0Ce36884bf611927F39af0f62138BeC) (MUMBAI -> 0xbdac6fbb23ffebf895bda3960451f3aa64c6b9c8)
 
 # Public URL
 
