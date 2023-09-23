@@ -26,6 +26,10 @@ async function main() {
   const sWallet = "0x7baB11bECD925413eae49b9278fae3476aD17EDd";
   const cWallet = "0x9325ED3fe17893b8eA8B8507427A8c07f14d0E03";
 
+  // Scroll Testnet
+  // SimpleErc721 Deployed to -> 0x39A02239e680C35f4867BDc86a7771D74001CfBe
+  // Linkt Deployed to -> 0xC8956c09455D6c499E78137BAA3b43e81FC20326
+
   await simpleErc721.mint(sWallet, 1);
   await simpleErc721.mint(cWallet, 1);
   console.log(`Minted a Token each to S/C`);
