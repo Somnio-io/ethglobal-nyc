@@ -33,10 +33,22 @@ export interface Video {
   audience: EAudience;
 }
 
-interface IPrepareTransaction {
-  address: `0x${string}`;
-  abi: any;
-}
+export const lookupConnectedContract = async (publisher: string, token: string) => {
+  try {
+    const req = await fetch(`${USER_URL}?lookupConnectedContract=${publisher}`, {
+      method: "GET",
+      headers: {
+        Authorization: token as string,
+      },
+    });
+    const _json = JSON.parse(await req.json());
+    console.log(_json);
+    return _json.user.contractAddress;
+  } catch (error) {
+    console.log(error);
+    return "";
+  }
+};
 
 export const uploadToS3 = (uploadUrl: string, fileData: File, contentType: string, setProgress: Dispatch<SetStateAction<number>>) => {
   return new Promise((resolve, reject) => {
