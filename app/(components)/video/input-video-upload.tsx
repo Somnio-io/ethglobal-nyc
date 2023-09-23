@@ -199,17 +199,18 @@ export function UploadVideo() {
           return; // Return, dont continue to upload anything
         }
         // After a successful video being published, remove the discovery cache
-        await fetch("/dashboard/api/revalidate?tag=discovery&secret=foobar", {
+        const req = await fetch("/dashboard/api/revalidate?tag=discovery&secret=foobar", {
           method: "POST",
         });
+        if (req.ok) {
+          router.replace(`/`);
+        }
         setUploadStatus("Successfully uploaded file.");
       } else {
         setUploadStatus("Failed to upload file.");
       }
     } catch (error) {
       setUploadStatus(`An error occurred: ${error}`);
-    } finally {
-      router.replace(`/`);
     }
   };
 
