@@ -21,10 +21,7 @@ export async function GET(request: NextRequest) {
   let response = [];
 
   if (!account) {
-    return NextResponse.json(
-      { message: "Missing account param" },
-      { status: 400 }
-    );
+    return NextResponse.json({ message: "Missing account param" }, { status: 400 });
   }
 
   if (process.env.FEATURE_ENABLE_QUICKNODE) {
@@ -105,7 +102,7 @@ export async function GET(request: NextRequest) {
 
     const listNftsForAddress = `query MyQuery {
       Ethereum: TokenBalances(
-        input: {filter: {owner: {_eq: "yellie.eth"}, tokenType: {_eq: ERC721}}, blockchain: ethereum, limit: 50}
+        input: {filter: {owner: {_eq: "${account}"}, tokenType: {_eq: ERC721}}, blockchain: ${network}, limit: 50}
       ) {
         TokenBalance {
           owner {
@@ -149,12 +146,8 @@ export async function GET(request: NextRequest) {
         name: token.token.name,
         address: token.tokenAddress,
         id: token.tokenId,
-        image: token.tokenNfts.contentValue.image
-          ? token.tokenNfts.contentValue.image.small
-          : "",
-        thumbnail: token.tokenNfts.contentValue.image
-          ? token.tokenNfts.contentValue.image.small
-          : "",
+        image: token.tokenNfts.contentValue.image ? token.tokenNfts.contentValue.image.small : "",
+        thumbnail: token.tokenNfts.contentValue.image ? token.tokenNfts.contentValue.image.small : "",
       };
       result[token.tokenAddress].push(_token);
     }
