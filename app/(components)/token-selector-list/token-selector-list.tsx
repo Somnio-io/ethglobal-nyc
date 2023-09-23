@@ -187,10 +187,13 @@ export function TokenSelectorList({ account }: TokenSelectorListProps) {
         method: "GET",
         headers: {},
       });
-      const jsonData = await data.json();
 
-      console.log("API: ", jsonData);
-      setContent(jsonData.tokens);
+      if (data.ok) {
+        console.log("API: ", data);
+        // const jsonData = await data.json();
+        // setContent(jsonData.tokens);
+      }
+
       setLoading(false);
     };
     _fetch();
