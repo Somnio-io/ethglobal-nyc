@@ -85,10 +85,9 @@ function NavigationBase() {
         <a
           onClick={handleButtonClick}
           aria-label={isAuthed ? "Sign Out" : "Sign In"}
-          className={`p-2 h-full flex flex-col items-center hover:bg-pink-600 z-60 ${
-            isAuthed ? "cursor-pointer opacity-100" : "cursor-not-allowed opacity-50"
-          }`}
-          aria-disabled={!isAuthed}
+          className={`p-2 h-full flex flex-col items-center cursor-pointer hover:bg-pink-600 z-60 
+           
+          `}
         >
           {isAuthed ? (
             <>
