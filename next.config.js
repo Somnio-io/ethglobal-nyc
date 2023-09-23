@@ -1,54 +1,66 @@
-// /** @type {import('next').NextConfig} */
+/** @type {import('next').NextConfig} */
 
-// const withPWA = require("next-pwa");
-
-// //const nextConfig = {}
-
-// module.exports = withPWA({
-//   pwa: {
-//     dest: "public",
-//     register: true,
-//     skipWaiting: true,
-//   },
-// });
-
-const path = require("path");
-const withPWAInit = require("next-pwa");
-
-/** @type {import('next-pwa').PWAConfig} */
-const withPWA = withPWAInit({
-  dest: "public",
-  // Solution: https://github.com/shadowwalker/next-pwa/issues/424#issuecomment-1399683017
-  buildExcludes: ["app-build-manifest.json"],
-});
-
-const generateAppDirEntry = (entry) => {
-  const packagePath = require.resolve("next-pwa");
-  const packageDirectory = path.dirname(packagePath);
-  const registerJs = path.join(packageDirectory, "register.js");
-
-  return entry().then((entries) => {
-    // Register SW on App directory, solution: https://github.com/shadowwalker/next-pwa/pull/427
-    if (entries["main-app"] && !entries["main-app"].includes(registerJs)) {
-      if (Array.isArray(entries["main-app"])) {
-        entries["main-app"].unshift(registerJs);
-      } else if (typeof entries["main-app"] === "string") {
-        entries["main-app"] = [registerJs, entries["main-app"]];
-      }
-    }
-    return entries;
-  });
+const Networks = {
+  ETH_MAINNET: "eth-mainnet",
+  ETH_ROPSTEN: "eth-ropsten",
+  ETH_GOERLI: "eth-goerli",
+  ETH_KOVAN: "eth-kovan",
+  ETH_RINKEBY: "eth-rinkeby",
+  ETH_SEPOLIA: "eth-sepolia",
+  OPT_MAINNET: "opt-mainnet",
+  OPT_KOVAN: "opt-kovan",
+  OPT_GOERLI: "opt-goerli",
+  ARB_MAINNET: "arb-mainnet",
+  ARB_RINKEBY: "arb-rinkeby",
+  ARB_GOERLI: "arb-goerli",
+  MATIC_MAINNET: "polygon-mainnet",
+  MATIC_MUMBAI: "polygon-mumbai",
+  ASTAR_MAINNET: "astar-mainnet",
+  POLYGONZKEVM_MAINNET: "polygonzkevm-mainnet",
+  POLYGONZKEVM_TESTNET: "polygonzkevm-testnet",
+  BASE_MAINNET: "base-mainnet",
+  BASE_GOERLI: "base-goerli",
 };
 
-/** @type {import('next').NextConfig} */
+const deployedContractAddress = {
+  MATIC_MAINNET: "",
+  MATIC_MUMBAI: "",
+};
+
+const selectedNetwork = Networks["ETH_MAINNET"];
+
 const nextConfig = {
   reactStrictMode: true,
-  webpack: (config) => {
-    const entry = generateAppDirEntry(config.entry);
-    config.entry = () => entry;
+  swcMinify: true,
+  env: {
+    FEATURE_QUICKNODE_ENDPOINT: process.env[`FEATURE_QUICKNODE_ENDPOINT_${selectedNetwork}`],
+    FEATURE_TARGET_NETWORK: selectedNetwork,
+    FEATURE_ENABLE_GASLESS_TRANSACTIONS: false, // https://ethglobal.com/events/newyork2023/prizes#biconomy
 
+    FEATURE_ENABLE_QUICKNODE: false, // https://ethglobal.com/events/newyork2023/prizes/quicknode-64ekr
+    FEATURE_ENABLE_ALCHEMY: false, // No bounty - but required for access to many chains ERC721 data
+    FEATURE_ENABLE_AIRSTACK: true, // https://ethglobal.com/events/newyork2023/prizes#airstack
+
+    FEATURE_ENABLE_TIPPING_TOKEN: false, // https://ethglobal.com/events/newyork2023/prizes/apecoin-dao-mu0vz
+    FEATURE_ENABLE_TIPPING_TOKEN_ADDRESS: "", // What token will be used for tipping? -> https://ethglobal.com/events/newyork2023/prizes/apecoin-dao-mu0vz - https://ethglobal.com/events/newyork2023/prizes/aave-grants-dao-ac2mc
+    FEATURE_DEPLOYED_CONTRACT_ADDRESS: deployedContractAddress[selectedNetwork],
+
+    FEATURE_ENABLE_STREAMING_ENDPOINT: "rtmps://b9e19e28061f.global-contribute.live-video.net:443/app/",
+  },
+  images: {
+    // For anything other than a hackathon, lock this down..
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
+    ],
+  },
+  webpack: (config) => {
+    config.externals.push("pino-pretty", "lokijs", "encoding");
+    config.resolve.fallback = { fs: false, net: false, tls: false };
     return config;
   },
 };
 
-module.exports = withPWA(nextConfig);
+module.exports = nextConfig;
