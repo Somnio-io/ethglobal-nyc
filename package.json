@@ -45,7 +45,6 @@
     "lokijs": "^1.5.12",
     "lucide-react": "^0.274.0",
     "next": "13.5.2",
-    "next-pwa": "^5.6.0",
     "next-themes": "^0.2.1",
     "pino-pretty": "^10.2.0",
     "postcss": "8.4.30",
