@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: Pepega
-// Tons of great inspiration from https://github.com/Vectorized/solady
 pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
