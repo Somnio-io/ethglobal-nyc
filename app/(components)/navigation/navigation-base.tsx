@@ -36,6 +36,18 @@ function NavigationBase() {
     };
   }, [showButtons]);
 
+  const handleButtonClick = async () => {
+    if (isAuthed) {
+      signOut();
+      router.replace("/");
+    } else {
+      const user = await signIn();
+      if (user) {
+        router.replace(`/dashboard/${user.address}`);
+      }
+    }
+  };
+
   if (!signIn || !signOut) {
     return <p>Loading...</p>;
   }
@@ -70,23 +82,26 @@ function NavigationBase() {
           </a>
         </Link>
 
-        <button
-          onClick={async () => {
-            if (isAuthed) {
-              signOut();
-              router.replace("/");
-            } else {
-              const user = await signIn();
-              if (user) {
-                router.replace(`/dashboard/${user.address}`);
-              }
-            }
-          }}
+        <a
+          onClick={handleButtonClick}
           aria-label={isAuthed ? "Sign Out" : "Sign In"}
-          className="p-2 h-full flex items-center z-60 cursor-pointer"
+          className={`p-2 h-full flex flex-col items-center hover:bg-pink-600 z-60 ${
+            isAuthed ? "cursor-pointer opacity-100" : "cursor-not-allowed opacity-50"
+          }`}
+          aria-disabled={!isAuthed}
         >
-          {isAuthed ? <ExitIcon className="h-6 w-6" /> : <EnterIcon className="h-6 w-6" />}
-        </button>
+          {isAuthed ? (
+            <>
+              <ExitIcon className="h-6 w-6" />
+              Sign Out
+            </>
+          ) : (
+            <>
+              <EnterIcon className="h-6 w-6" />
+              Sign In
+            </>
+          )}
+        </a>
       </div>
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-full flex justify-center z-50">
         <Popover>
