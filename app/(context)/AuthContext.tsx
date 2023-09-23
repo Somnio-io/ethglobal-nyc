@@ -24,7 +24,7 @@ interface IAuthContext {
 
 export interface User {
   address: string;
-  connectedContract?: string;
+  contractAddress?: string;
 }
 
 const AppContext = createContext<IAuthContext>({} as IAuthContext);
@@ -46,7 +46,7 @@ export function AuthWrapper({ children }: any) {
       console.log(`Calling check user in auth context`);
       const user = await checkUser();
       if (user) {
-        setConnectedContract(user?.connectedContract || "");
+        setConnectedContract(user?.contractAddress || "");
         setAccount(user.address);
         setIsLoading(false);
         return;
@@ -77,7 +77,7 @@ export function AuthWrapper({ children }: any) {
       const user = response.user as User;
       if (user.address) {
         localStorage.setItem("token", token);
-        setConnectedContract(user?.connectedContract || "");
+        setConnectedContract(user?.contractAddress || "");
         setIsAuthed(true);
         return user;
       }
@@ -117,7 +117,7 @@ export function AuthWrapper({ children }: any) {
       const user = response.user as User;
       if (user.address) {
         localStorage.setItem("token", token);
-        setConnectedContract(user?.connectedContract || "");
+        setConnectedContract(user?.contractAddress || "");
         setAccount(user.address);
         setIsAuthed(true);
         return user;
