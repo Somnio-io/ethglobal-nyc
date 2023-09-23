@@ -27,7 +27,7 @@ function CarouselBase({ name, content }: CarouselBaseProps) {
                   pathname: `/watch/${_content.id}`,
                   query: { publisher: _content.publisher },
                 }}
-                key={`link-${_content.id}`}
+                key={`link-${_content.id}-${name}`}
               >
                 <CarouselItem
                   key={`${_content.id} + ${i}`}
