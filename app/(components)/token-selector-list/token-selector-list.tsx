@@ -2,7 +2,7 @@
 import Image from "next/image";
 
 import { useEffect, useState } from "react";
-import { useContractRead } from "wagmi";
+import { useContractRead, useContractWrite, usePrepareContractWrite } from "wagmi";
 import { LINKT_ABI } from "@/(lib)/utils";
 import { FormattedCollection, FormattedToken } from "@/dashboard/api/tokens/route";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
@@ -29,28 +29,29 @@ export function TokenSelector(tokens: any[]) {
   if (!_tokens.length) return null;
 
   return (
-    <div
-      className={`flex items-center gap-10 hover:opacity-50 h-[50px] cursor-pointer stroke-primary stroke-2 bg-transparent border ${
-        selected ? "border-green-500" : "border-red-500"
-      }`}
-    >
+    // <div
+    //   className={`flex items-center gap-10 hover:opacity-50 h-[50px] cursor-pointer stroke-primary stroke-2 bg-transparent border ${
+    //     selected ? "border-green-500" : "border-red-500"
+    //   }`}
+    // >
+    <>
       {/* <Checkbox /> */}
       <DropdownMenu>
         <DropdownMenuTrigger className={`w-full m-5`} asChild>
           <span>
-            {_tokens[0].name} {_tokens.find((item) => item.selected === true) ? _tokens.find((item) => item.selected === true).id : null}
+            {_tokens[0].name} {_tokens[0].selected}
           </span>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           {_tokens.map((token) => (
-            <DropdownMenuItem key={token.id} onClick={() => (token.selected = true)}>
+            <DropdownMenuItem key={token.id} onClick={() => setSelected(token)}>
               <Image unoptimized={true} src={token.thumbnail} height={50} width={50} alt={token.id} />
               {token.id}
             </DropdownMenuItem>
           ))}
         </DropdownMenuContent>
       </DropdownMenu>
-    </div>
+    </>
   );
 }
 
@@ -77,6 +78,22 @@ export function TokenSelectorList({ account }: TokenSelectorListProps) {
     _fetch();
   }, []);
 
+  const handleSave = () => {
+    // const { config } = usePrepareContractWrite({
+    //   address: process.env.NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS as `0x${string}`,
+    //   abi: LINKT_ABI,
+    //   functionName: "addUserTokenMapping",
+    // });
+
+    const { data, write } = useContractWrite({
+      enabled: false,
+      address: process.env.NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS as `0x${string}`,
+      abi: LINKT_ABI,
+      functionName: "addUserTokenMapping",
+    });
+    write();
+  };
+
   useContractRead({
     abi: LINKT_ABI,
     enabled: Boolean(true),
@@ -84,8 +101,8 @@ export function TokenSelectorList({ account }: TokenSelectorListProps) {
     onSuccess(data: any) {
       console.log("DATAAAAA ::::", data);
       if (data[0].length && data[1].length) {
-        for (const _contract of data[0]) {
-          console.log(content[_contract]);
+        for (let i = 0; i < data[0].length; i++) {
+          content[data[0][i]].selected = data[1][i];
         }
       }
     },
@@ -102,7 +119,45 @@ export function TokenSelectorList({ account }: TokenSelectorListProps) {
   return (
     <>
       <div className={`max-h-[225px] overflow-y-scroll`}>
-        {Object.values(content).length ? Object.values(content).map((tokens, i) => <TokenSelector key={i} {...tokens.tokens} />) : null}
+        {Object.values(content).length
+          ? Object.values(content).map((tokens, i) => (
+              <div
+                key={tokens.tokens[0].address}
+                className={`flex items-center gap-10 hover:opacity-50 h-[50px] cursor-pointer stroke-primary stroke-2 bg-transparent border ${
+                  tokens.selected !== "" ? "border-green-500" : "border-red-500"
+                }`}
+              >
+                <DropdownMenu>
+                  <DropdownMenuTrigger className={`w-full m-5`} asChild>
+                    <span>
+                      {tokens.tokens[0].name} {tokens.selected}
+                    </span>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    {tokens.tokens.map((token) => (
+                      <DropdownMenuItem
+                        key={token.id}
+                        onClick={() => {
+                          setContent((prev) => {
+                            return {
+                              ...prev,
+                              [token.address]: {
+                                ...prev[token.address],
+                                selected: token.id,
+                              },
+                            };
+                          });
+                        }}
+                      >
+                        <Image unoptimized={true} src={token.thumbnail} height={50} width={50} alt={token.id} />
+                        {token.id}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            ))
+          : null}
       </div>
       <button className="mt-5 border border-white h-[50px]">SAVE</button>
     </>
