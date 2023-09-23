@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { Input } from "@/(components)/ui/input";
 import { Label } from "@/(components)/ui/label";
@@ -84,6 +84,10 @@ export function UploadVideo() {
   const [videoData, handleVideoFileChange] = useFileWithSource();
   const [placeholderData, handlePlaceholderFileChange] = useFileWithSource();
 
+  const MemoizedProgressBar = useMemo(() => {
+    return progress > 0 ? <ProgressBar progress={progress} /> : null;
+  }, [progress]);
+
   useEffect(() => {
     const _fetch = async () => {
       const token = localStorage.getItem("token");
@@ -160,16 +164,6 @@ export function UploadVideo() {
     });
     const videoPreSignedUrlData = JSON.parse(await videoPreSignedUrl.json());
 
-    try {
-      write?.(); // Publish Video content to contract
-      if (isSuccess) {
-        console.log(`Success!`);
-      }
-    } catch (error) {
-      console.log(`Error!`, error);
-      return; // Return, dont continue to upload anything
-    }
-
     if (placeholderData.file) {
       const placeholderPresignUrl = await fetch(UPLOAD_URL, {
         method: "GET",
@@ -187,9 +181,6 @@ export function UploadVideo() {
     try {
       let response;
       if (token) {
-        // Make a contract call here to publish video
-        // If the user declines, dont upload.
-
         response = await fetch(videoPreSignedUrlData.uploadUrl, {
           method: "PUT",
           body: videoData.file,
@@ -200,6 +191,15 @@ export function UploadVideo() {
       }
 
       if (response?.ok) {
+        try {
+          write?.(); // Publish Video content to contract
+          if (isSuccess) {
+            console.log(`Success!`);
+          }
+        } catch (error) {
+          console.log(`Error!`, error);
+          return; // Return, dont continue to upload anything
+        }
         // After a successful video being published, remove the discovery cache
         const revalidate = await fetch("/dashboard/api/revalidate?tag=discovery&secret=foobar", {
           method: "POST",
@@ -249,7 +249,7 @@ export function UploadVideo() {
       <Button onClick={handleUpload} className="btn btn-primary">
         Upload
       </Button>
-      {progress > 0 ? <ProgressBar progress={progress} /> : null}
+      {MemoizedProgressBar}
       {uploadStatus ? <div className="text-sm text-white">{uploadStatus}</div> : null}
     </div>
   );

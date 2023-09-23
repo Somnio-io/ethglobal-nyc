@@ -12,13 +12,7 @@ interface carouselItemProps extends React.HTMLAttributes<HTMLDivElement> {
   height?: number;
   aspectRatio?: "portrait" | "square";
 }
-function carouselItem({
-  title,
-  placeholder,
-  width,
-  height,
-  aspectRatio,
-}: carouselItemProps) {
+function carouselItem({ title, placeholder, width, height, aspectRatio }: carouselItemProps) {
   if (!placeholder) {
     return <>Loading...</>;
   }
@@ -29,14 +23,12 @@ function carouselItem({
         <Image
           src={placeholder}
           alt={title}
+          priority={true}
           unoptimized={true}
           width={width}
           height={height}
           style={{ objectFit: "cover" }}
-          className={cn(
-            "h-auto w-auto transition-all hover:scale-105",
-            aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-square"
-          )}
+          className={cn("h-auto w-auto transition-all hover:scale-105", aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-square")}
         />
       </div>
       <div className="mt-3 text-sm">

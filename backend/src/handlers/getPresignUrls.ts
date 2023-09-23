@@ -86,8 +86,13 @@ export const getPresignUrls: APIGatewayProxyHandler = async (event) => {
     return createApiGatewayResponse(403, JSON.stringify({ message: "Invalid User" }));
   }
 
-  // const mappedContract = Find this users mapped contract
-  //
+  // call getUserTokenMapping.
+  // For each
+  // const [mappedAddresses, mappedTokenIds] = await linkt.getUserTokenMapping(owner.address);
+  // const mappedTokenIdsAsNumbers = mappedTokenIds.map((id) => id.toNumber());
+  // // Assert the correctness of the mapped addresses and token IDs
+  // expect(mappedAddresses).to.include.members([erc721Mock.address, erc721Mock2.address]);
+
   const lowerCaseAddress = (await authUserToken(token)) || "unauthorized";
   const provider = new ethers.JsonRpcProvider(process.env.RPC_ENDPOINT);
   const contract = new ethers.Contract(process.env.DEPLOYED_CONTRACT_ADDRESS as string, LINKT_ABI, provider);

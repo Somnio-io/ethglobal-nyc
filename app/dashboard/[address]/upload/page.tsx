@@ -10,13 +10,13 @@ export default function Page({ params }: { params: { address: string } }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
   const [content, setContent] = useState<Partial<User>>({});
-  const [showConnectContract, setShowConnectContract] =
-    useState<boolean>(false);
+  const [showConnectContract, setShowConnectContract] = useState<boolean>(false);
 
   useEffect(() => {
     console.log(`Running UE`);
     const _fetch = async () => {
       const token = localStorage.getItem("token");
+      console.log(`Token!`, token);
       if (!token) {
         setError("Login to upload content.");
         setLoading(false);
@@ -30,6 +30,7 @@ export default function Page({ params }: { params: { address: string } }) {
         },
       });
       const jsonData = JSON.parse(await data.json());
+      console.log(jsonData);
       if (!jsonData.user?.contractAddress) {
         setShowConnectContract(true);
         setLoading(false);
@@ -59,12 +60,8 @@ export default function Page({ params }: { params: { address: string } }) {
         </>
       ) : (
         <>
-          <h2 className="text-2xl font-bold tracking-tight space-y-6">
-            Upload
-          </h2>
-          <p className="text-muted-foreground">
-            Upload your content and pick the audience you want to share it with.
-          </p>
+          <h2 className="text-2xl font-bold tracking-tight space-y-6">Upload</h2>
+          <p className="text-muted-foreground">Upload your content and pick the audience you want to share it with.</p>
           <UploadForm />
         </>
       )}
