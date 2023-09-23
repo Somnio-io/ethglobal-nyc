@@ -24,9 +24,11 @@ async function main() {
   console.log(`Linkt Deployed to -> ${linkt.address}`);
 
   const sWallet = "0x7baB11bECD925413eae49b9278fae3476aD17EDd";
-  const cWallet = "";
+  const cWallet = "0x9325ED3fe17893b8eA8B8507427A8c07f14d0E03";
 
   await simpleErc721.mint(sWallet, 1);
+  await simpleErc721.mint(cWallet, 1);
+  console.log(`Minted a Token each to S/C`);
 }
 
 main().catch((error) => {
