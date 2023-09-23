@@ -8,7 +8,7 @@ import { Video } from "@/(lib)/utils";
 import Link from "next/link";
 import { Separator } from "@/(components)/ui/separator";
 
-interface CarouselBaseProps extends React.HTMLAttributes<HTMLDivElement> {
+interface CarouselBaseProps {
   name: string;
   content: Video[];
 }
@@ -16,9 +16,7 @@ interface CarouselBaseProps extends React.HTMLAttributes<HTMLDivElement> {
 function CarouselBase({ name, content }: CarouselBaseProps) {
   return (
     <section className="my-8 relative">
-      <h3 className="text-2xl font-semibold tracking-tight max-w-md  text-current">
-        {name}
-      </h3>
+      <h3 className="text-2xl font-semibold tracking-tight max-w-md  text-current">{name}</h3>
       <Separator className="my-4" />
       <ScrollArea>
         <div className="ml-2 flex space-x-4 py-6 scroll-smooth">
