@@ -14,6 +14,7 @@ interface CarouselBaseProps {
 }
 
 function CarouselBase({ name, content }: CarouselBaseProps) {
+  console.log(content);
   return (
     <section className="my-8 relative">
       <h3 className="text-2xl font-semibold tracking-tight max-w-md  text-current">{name}</h3>
@@ -24,7 +25,7 @@ function CarouselBase({ name, content }: CarouselBaseProps) {
             content.map((_content, i) => (
               <Link
                 href={{
-                  pathname: `/watch/${_content.id}`,
+                  pathname: _content.live ? `/live/${_content.id}` : `/watch/${_content.id}`,
                   query: { publisher: _content.publisher },
                 }}
                 key={`link-${_content.id}`}

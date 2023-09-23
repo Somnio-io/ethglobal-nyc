@@ -14,12 +14,8 @@ export default function Page({ params }: { params: { address: string } }) {
 
   return (
     <>
-      <h2 className="text-2xl font-bold tracking-tight space-y-6 mb-4">
-        Go Live!
-      </h2>
-      <p className="text-muted-foreground mb-8">
-        Stream in real-time to your linked audience
-      </p>
+      <h2 className="text-2xl font-bold tracking-tight space-y-6 mb-4">Go Live!</h2>
+      <p className="text-muted-foreground mb-8">Stream in real-time to your linked audience</p>
       <DefaultInput
         type="text"
         className="mb-2"
@@ -39,21 +35,12 @@ export default function Page({ params }: { params: { address: string } }) {
         name="Description"
       />
       Stream Input URL:
-      <p className="text-muted-foreground mb-2">
-        {process.env.FEATURE_ENABLE_STREAMING_ENDPOINT}
-      </p>
+      <p className="text-muted-foreground mb-2">{process.env.FEATURE_ENABLE_STREAMING_ENDPOINT}</p>
       Stream Key:
-      <p className="text-muted-foreground mb-2">
-        {process.env.NEXT_PUBLIC_FEATURE_ENABLE_STREAM_KEY}
-      </p>
+      <p className="text-muted-foreground mb-2">{process.env.NEXT_PUBLIC_FEATURE_ENABLE_STREAM_KEY}</p>
       <div className="flex space-x-2 flex-start mb-2">
         {audiences.map((audience) => (
-          <AudienceSelector
-            key={audience}
-            name={audience}
-            isSelected={selectedAudience === audience}
-            handler={setSelectedAudience}
-          />
+          <AudienceSelector key={audience} name={audience} isSelected={selectedAudience === audience} handler={setSelectedAudience} />
         ))}
       </div>
       <Button
@@ -75,6 +62,10 @@ export default function Page({ params }: { params: { address: string } }) {
             }
           );
           if (data.ok) {
+            const revalidate = await fetch("/dashboard/api/revalidate?tag=discovery&secret=foobar", {
+              method: "POST",
+            });
+            console.log(revalidate);
             console.log(`User is now live..`);
           }
         }}
