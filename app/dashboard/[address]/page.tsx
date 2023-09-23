@@ -81,15 +81,15 @@ export default function Page({ params }: { params: { address: string } }) {
             </div>
             <article className="col-start-1 col-span-2 p-4  border-2  h-28 space-y-6">
               <h3 className="text-base font-medium tracking-tight "> Holders</h3>
-              <p className="text-2xl font-bold tracking-tight text-primary"> 20 </p>
+              <p className="text-2xl font-bold tracking-tight text-primary"> 12 </p>
             </article>
-            <article className="col-start-3 col-span-2 p-4  border-2   h-28 space-y-6">
+            <article className="col-start-3 col-span-2 p-4  border-2 h-28 space-y-6">
               <h3 className="text-base font-medium tracking-tight ">Watch hours</h3>
               <p className="text-2xl font-bold tracking-tight text-primary"> +20 </p>
             </article>
             <article className="col-start-1 col-span-4 p-4  border-2  h-32 space-y-6">
               <div className="flex justify-between">
-                <h3 className="text-base font-medium tracking-tight "> Tips</h3>
+                <h3 className="text-base font-medium tracking-tight ">Tips</h3>
                 <Button variant={"outline"} onClick={() => write?.()}>
                   Withdraw
                 </Button>
