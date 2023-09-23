@@ -45,7 +45,7 @@ function NavigationBase() {
       <div className="flex mx-auto w-full justify-between">
         <Link href="/" legacyBehavior passHref>
           <a aria-label="Home" className=" flex-col p-2 h-full flex items-center z-60 cursor-pointer">
-            <HomeIcon className="h-6 w-6 mb-0.5" />
+            <HomeIcon className="h-6 w-6 mb-0.5  hover:bg-primary/90" />
             <label className="text-small">Home</label>
           </a>
         </Link>
@@ -53,7 +53,9 @@ function NavigationBase() {
         <Link href={`/dashboard/${account}`} legacyBehavior passHref>
           <a
             aria-label="Dashboard"
-            className={`p-2 h-full flex flex-col items-center z-60  ${isAuthed ? "cursor-pointer opacity-100" : "cursor-not-allowed opacity-50"}`}
+            className={`  hover:bg-primary/90 p-2 h-full flex flex-col items-center z-60  ${
+              isAuthed ? "cursor-pointer opacity-100" : "cursor-not-allowed opacity-50"
+            }`}
             aria-disabled={!isAuthed}
           >
             <DashboardIcon className="h-6 w-6 mb-0.5" />
@@ -64,7 +66,9 @@ function NavigationBase() {
         <Link href={`/dashboard/${account}`} legacyBehavior passHref>
           <a
             aria-label="Settings"
-            className={`p-2 h-full flex flex-col items-center z-60  ${isAuthed ? "cursor-pointer opacity-100" : "cursor-not-allowed opacity-50"}`}
+            className={` hover:bg-primary/90 p-2 h-full flex flex-col items-center z-60  ${
+              isAuthed ? "cursor-pointer opacity-100" : "cursor-not-allowed opacity-50"
+            }`}
             aria-disabled={!isAuthed}
           >
             <GearIcon className="h-6 w-6 mb-0.5" />
@@ -90,7 +94,7 @@ function NavigationBase() {
           {isAuthed ? <ExitIcon className="h-6 w-6" /> : <EnterIcon className="h-6 w-6" />}
         </button>
       </div>
-      <div ref={menuRef} className="bg-primary rounded-full items-center left-1/2 absolute bottom-full space-y-1 transform -translate-x-1/2">
+      <div ref={menuRef} className=" rounded-full items-center left-1/2 absolute bottom-full space-y-1 transform -translate-x-1/2">
         <Popover>
           <PopoverTrigger asChild>
             <button
@@ -100,15 +104,19 @@ function NavigationBase() {
               onClick={() => setShowButtons(!showButtons)}
               aria-expanded={showButtons}
               aria-label="Toggle additional options"
-              className={`p-1 hover:bg-primary/90  flex items-center rounded-full z-60 ${isAuthed}? "opacity-100 cursor-pointer":"opacity-50 cursor-not-allowed"`}
+              className={`p-1  flex items-center rounded-full z-60 ${isAuthed}? "opacity-100 cursor-pointer":"opacity-50 cursor-not-allowed"`}
             >
-              <PlusCircledIcon className="h-8 w-8 bg-primary rounded-full  border-primary" />
+              <PlusCircledIcon className="h-8 w-8 bg-primary rounded-full  border-primary  hover:bg-primary/90" />
             </button>
           </PopoverTrigger>
 
           <PopoverContent className="flex flex-col bg-primary stroke-0">
             <Link href={`/dashboard/${account}/upload`} legacyBehavior passHref>
-              <a aria-label="Upload" className={`p-2 flex  ${isAuthed ? "cursor-pointer" : "cursor-not-allowed"}`} aria-disabled={!isAuthed}>
+              <a
+                aria-label="Upload"
+                className={`p-2 flex hover:bg-pink-700 ${isAuthed ? "cursor-pointer" : "cursor-not-allowed"}`}
+                aria-disabled={!isAuthed}
+              >
                 <UploadIcon className="h-6 w-6 ml-4" />
                 <label className="text-small">Upload</label>
               </a>
@@ -116,7 +124,7 @@ function NavigationBase() {
             <Link href={`/dashboard/${account}/live`} legacyBehavior passHref>
               <a
                 aria-label="Go Live"
-                className={` hover:bg-primary/90  p-2 flex  w-full  items-center  ${isAuthed ? "cursor-pointer" : "cursor-not-allowed"} `}
+                className={` hover:bg-pink-700  p-2 flex  w-full  items-center  ${isAuthed ? "cursor-pointer" : "cursor-not-allowed"} `}
                 aria-disabled={!isAuthed}
               >
                 <svg className="h-6 w-6 ml-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
