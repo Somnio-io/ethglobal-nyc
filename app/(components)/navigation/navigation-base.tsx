@@ -1,15 +1,7 @@
 "use client";
 
 import React from "react";
-import {
-  HomeIcon,
-  DashboardIcon,
-  UploadIcon,
-  EnterIcon,
-  ExitIcon,
-  PlusCircledIcon,
-  VideoIcon,
-} from "@radix-ui/react-icons";
+import { GearIcon, HomeIcon, DashboardIcon, UploadIcon, EnterIcon, ExitIcon, PlusCircledIcon, VideoIcon } from "@radix-ui/react-icons";
 import { useAuthContext } from "@/(context)/AuthContext";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -48,31 +40,34 @@ function NavigationBase() {
   }
 
   return (
-    <nav
-      className="fixed bottom-0 w-full px-4 py-2 bg-primary items-center flex z-40"
-      aria-label="Main navigation"
-    >
+    <nav className="fixed bottom-0 w-full px-4 py-2 bg-primary items-center flex z-40" aria-label="Main navigation">
       <div className="flex mx-auto w-full justify-between">
         <Link href="/" legacyBehavior passHref>
-          <a
-            aria-label="Home"
-            className="p-2 h-full flex items-center z-60 cursor-pointer"
-          >
-            <HomeIcon className="h-6 w-6" />
+          <a aria-label="Home" className=" flex-col p-2 h-full flex items-center z-60 cursor-pointer">
+            <HomeIcon className="h-6 w-6 mb-0.5" />
+            <label className="text-small">Home</label>
           </a>
         </Link>
 
         <Link href={`/dashboard/${account}`} legacyBehavior passHref>
           <a
             aria-label="Dashboard"
-            className={`p-2 h-full flex items-center z-60  ${
-              isAuthed
-                ? "cursor-pointer opacity-100"
-                : "cursor-not-allowed opacity-50"
-            }`}
+            className={`p-2 h-full flex flex-col items-center z-60  ${isAuthed ? "cursor-pointer opacity-100" : "cursor-not-allowed opacity-50"}`}
             aria-disabled={!isAuthed}
           >
-            <DashboardIcon className="h-6 w-6" />
+            <DashboardIcon className="h-6 w-6 mb-0.5" />
+            <label className="text-small">Dashboard</label>
+          </a>
+        </Link>
+
+        <Link href={`/dashboard/${account}`} legacyBehavior passHref>
+          <a
+            aria-label="Settings"
+            className={`p-2 h-full flex flex-col items-center z-60  ${isAuthed ? "cursor-pointer opacity-100" : "cursor-not-allowed opacity-50"}`}
+            aria-disabled={!isAuthed}
+          >
+            <GearIcon className="h-6 w-6 mb-0.5" />
+            <label className="text-small">Settings</label>
           </a>
         </Link>
 
@@ -91,15 +86,11 @@ function NavigationBase() {
           aria-label={isAuthed ? "Sign Out" : "Sign In"}
           className="p-2 h-full flex items-center z-60 cursor-pointer"
         >
-          {isAuthed ? (
-            <ExitIcon className="h-6 w-6" />
-          ) : (
-            <EnterIcon className="h-6 w-6" />
-          )}
+          {isAuthed ? <ExitIcon className="h-6 w-6" /> : <EnterIcon className="h-6 w-6" />}
         </button>
       </div>
 
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-full flex justify-center z-50">
+      {/* <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-full flex justify-center z-50">
         <div className="relative">
           <button
             ref={buttonRef}
@@ -165,7 +156,7 @@ function NavigationBase() {
             </Link>
           </div>
         </div>
-      </div>
+      </div> */}
     </nav>
   );
 }
