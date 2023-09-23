@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { Badge } from "@/(components)/ui/badge";
 import { Button } from "@/(components)/ui/button";
 import { HeartFilledIcon } from "@radix-ui/react-icons";
+import { TipModal } from "@/(components)/tip-modal/tip-modal";
 
 export default function Page({ params }: { params: { id: string } }) {
   const searchParams = useSearchParams();
@@ -82,18 +83,16 @@ export default function Page({ params }: { params: { id: string } }) {
           <Button variant="outline" size="icon">
             <HeartFilledIcon className="h-4 w-4" />
           </Button>
-          <Button variant="secondary">Tip</Button>
+          {!process.env.FEATURE_ENABLE_TIPPING_TOKEN ? <TipModal /> : null}
         </div>
         {/* is the user subscribed to this? show badge if not null */}
         {/* <Badge className="col-start-4 flex items-center justify-center text-center border-primary max-h-xs max-w-xs" variant="outline">
           Subscribed
         </Badge> */}
-        {/* <div className="flex justify-between">
-          <p>Likes Section</p>
-          {process.env.FEATURE_ENABLE_TIPPING_TOKEN ? <p>Tips Section</p> : null}
-        </div>
-        <p className="mt-4">{video?.description}</p> */}
       </div>
     )
   );
+}
+{
+  /* <Button variant="secondary">Tip</Button> */
 }
