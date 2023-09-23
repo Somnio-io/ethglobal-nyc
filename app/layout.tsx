@@ -13,15 +13,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <Script src="https://player.live-video.net/1.21.0/amazon-ivs-player.min.js" />
 
-      <body className="relative h-screen">
+      <body className="relative flex flex-col">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <RootProvider>
-            <header className="w-full flex justify-between  px-2 py-8">
+            <header className="w-full flex justify-between  px-2 py-8 overflow-hidden">
               <ToggleThemeButton />
               <ConnectWallet />
             </header>
             <AuthWrapper>
-              <main className="grid grid-cols-1  mx-auto max-w-xl p-4  overflow-y-auto">{children}</main>
+              <main className="flex-1 grid grid-cols-1  mx-auto max-w-xl p-4 pb-20  overflow-y-auto">{children}</main>
+
               <NavigationBase />
             </AuthWrapper>
           </RootProvider>
