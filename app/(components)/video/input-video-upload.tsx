@@ -107,7 +107,7 @@ export function UploadVideo() {
   }, []);
   console.log(`The Deployed Contract is ${process.env.NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS}`);
 
-  const { data: publicationCount } = useContractRead({
+  useContractRead({
     abi: LINKT_ABI,
     enabled: Boolean(connectedContract),
     functionName: "getPublicationCount",
@@ -121,6 +121,7 @@ export function UploadVideo() {
   }) as any;
 
   // console.log(`Publication Count! `, publicationCount);
+  console.log(Boolean(uploadName && uploadDescription && selectedAudience && fileHash));
   const { config, refetch } = usePrepareContractWrite({
     abi: LINKT_ABI,
     functionName: "publishVideo",
@@ -130,38 +131,52 @@ export function UploadVideo() {
     onError(err) {
       console.log(err);
     },
-    // 2, "md5Hash2", erc721Mock.address, {
-    //   audienceType: 0,
-    //   tokenId: 0,
-    // }
+
     enabled: Boolean(uploadName && uploadDescription && selectedAudience && fileHash),
     args: [
       nextPublicationId, // VideoId - always just increment what is existing
       fileHash,
       connectedContract,
-      Object.values({
+      {
         audienceType: audiences.indexOf(selectedAudience) + 1,
         tokenId: 0, // Only for token publishing
-      }),
+      },
     ],
     address: process.env.NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS as `0x${string}`,
   });
 
   const { data, isLoading, isSuccess, error, isError, write, reset, variables } = useContractWrite({
     ...config,
+    // address: process.env.NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS as `0x${string}`,
+    // abi: LINKT_ABI,
+    // functionName: "publishVideo",
+    // args: [
+    //   nextPublicationId, // VideoId - always just increment what is existing
+    //   fileHash,
+    //   connectedContract,
+    //   {
+    //     audienceType: audiences.indexOf(selectedAudience) + 1,
+    //     tokenId: 0, // Only for token publishing
+    //   },
+    // ],
     onSuccess(data1, variables, context) {
+      console.log(`success`);
+
       console.log(data1);
       console.log(data);
     },
     onError(error1, variables, context) {
+      console.log(`error`);
+
       console.log(data);
       console.log(error1);
     },
     onSettled(data, error, variables, context) {
+      console.log(`Settle`);
       console.log(data, error, variables, context);
     },
   });
-  console.log(`Output`, data, isLoading, isSuccess, error, isError, write, reset, variables);
+  console.log(`Output`, data, error);
 
   const handleUpload = async () => {
     const token = localStorage.getItem("token");
