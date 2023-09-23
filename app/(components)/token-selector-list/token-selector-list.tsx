@@ -1,9 +1,11 @@
 "use client";
+import Image from "next/image";
 
 import { useEffect, useState } from "react";
-import { TokenSelector } from "../token-selector/token-selector";
 import { useContractRead } from "wagmi";
 import { LINKT_ABI } from "@/(lib)/utils";
+import { FormattedToken } from "@/dashboard/api/tokens/route";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 
 interface TokenSelectorListProps {
   account: string;
@@ -159,27 +161,53 @@ export interface FormattedCollections {
   [contractAddress: string]: AlchemyNFT[];
 }
 
+interface FormattedSelection {
+  contracts: string[];
+  tokens: string[];
+}
+
+export function TokenSelector(tokens: any[]) {
+  const [selected, setSelected] = useState<FormattedToken>();
+  const _tokens = Object.values(tokens);
+
+  //console.log("Collection =>", _tokens)
+
+  if (!_tokens) {
+    return <p>Loading...</p>;
+  }
+
+  if (!_tokens.length) return null;
+
+  return (
+    <div
+      className={`flex items-center gap-10 hover:opacity-50 h-[50px] cursor-pointer stroke-primary stroke-2 bg-transparent border ${
+        selected ? "border-green-500" : "border-red-500"
+      }`}
+    >
+      {/* <Checkbox /> */}
+      <DropdownMenu>
+        <DropdownMenuTrigger className={`w-full m-5`} asChild>
+          <span>
+            {_tokens[0].name} {selected ? selected.id : null}
+          </span>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          {_tokens.map((token) => (
+            <DropdownMenuItem key={token.id} onClick={() => setSelected(token)}>
+              <Image unoptimized={true} src={token.thumbnail} height={50} width={50} alt={token.id} />
+              {token.id}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  );
+}
+
 export function TokenSelectorList({ account }: TokenSelectorListProps) {
   const [loading, setLoading] = useState(true);
-  const [selectedTokens, setSelectedTokens] = useState<AlchemyNFT[]>([]);
+  const [selectedTokens, setSelectedTokens] = useState<FormattedSelection>({ contracts: [], tokens: [] });
   const [content, setContent] = useState<FormattedCollections>({});
-
-  // const formatCollections = (tokenData: AlchemyNFT[]) => {
-  //   let result: FormattedCollections = {};
-
-  //   const filteredTokenData = tokenData.filter((item: AlchemyNFT) => item.tokenType === "ERC721")
-
-  //   for (const token of filteredTokenData) {
-  //     if(!result[token.contract.address]) {
-  //       result[token.contract.address] = [];
-  //     }
-  //     result[token.contract.address].push(token)
-  //   }
-
-  //   console.log("Result =>", result)
-
-  //   return result;
-  // }
 
   useEffect(() => {
     const _fetch = async () => {
@@ -205,6 +233,7 @@ export function TokenSelectorList({ account }: TokenSelectorListProps) {
     functionName: "getUserTokenMapping",
     onSuccess(data: any) {
       console.log("DATAAAAA ::::", data);
+      setSelectedTokens({ contracts: data[0], tokens: data[1] });
     },
     args: [account],
     address: process.env.NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS as `0x${string}`,
@@ -219,7 +248,7 @@ export function TokenSelectorList({ account }: TokenSelectorListProps) {
   return (
     <>
       <div className={`max-h-[225px] overflow-y-scroll`}>
-        {Object.values(content).length ? Object.values(content).map((tokens, i) => <TokenSelector {...tokens} key={i} />) : null}
+        {Object.values(content).length ? Object.values(content).map((tokens, i) => <TokenSelector key={i} {...tokens} />) : null}
       </div>
       <button className="mt-5 border border-white h-[50px]">SAVE</button>
     </>

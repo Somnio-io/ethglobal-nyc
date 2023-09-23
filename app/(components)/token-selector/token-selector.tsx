@@ -34,7 +34,7 @@ export function TokenSelector(tokens: any[]) {
         <DropdownMenuContent align="end">
           {_tokens.map((token) => (
             <DropdownMenuItem key={token.id} onClick={() => setSelected(token)}>
-              <Image unoptimized={true} src={token.thumbnail} height={50} width={50} alt={token.id} />
+              <Image unoptimized={true} src={token.thumbnail} height={50} width={50} alt={token.tokenId} />
               {token.id}
             </DropdownMenuItem>
           ))}
