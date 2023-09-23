@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { AlchemyNFT, FormattedCollections } from "../token-selector-list/token-selector-list";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import { Checkbox } from "../ui/checkbox";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
