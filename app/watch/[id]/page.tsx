@@ -3,6 +3,9 @@
 import { CONTENT_URL, ContentKey, Video, transformData } from "@/(lib)/utils";
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { Badge } from "@/(components)/ui/badge";
+import { Button } from "@/(components)/ui/button";
+import { HeartFilledIcon } from "@radix-ui/react-icons";
 
 export default function Page({ params }: { params: { id: string } }) {
   const searchParams = useSearchParams();
@@ -68,11 +71,23 @@ export default function Page({ params }: { params: { id: string } }) {
             <source src={video?.url} type="video/mp4" />
           </video>
         </div>
-        <div className="cols-span-2 justify-between mt-5 ">
+        <div className="col-start-1 col-span-2 justify-between mt-5 ">
           <h3 className="font-semibold capitalize text-wrap mb-1">{video?.name}</h3>
-          <p className="text"> author</p>
+          <p className="text mb-2"> author</p>
         </div>
-        <p className="mt-5 text-regular col-span-4 text-wrap">{video?.description}</p>
+
+        <p className="mt-5 text-regular col-start-1 col-span-2 text-wrap">{video?.description}</p>
+
+        <div className="row-start-2 col-start-3 space-x-4 justify-self-end col-span-2">
+          <Button variant="outline" size="icon">
+            <HeartFilledIcon className="h-4 w-4" />
+          </Button>
+          <Button variant="secondary">Tip</Button>
+        </div>
+        {/* is the user subscribed to this? show badge if not null */}
+        {/* <Badge className="col-start-4 flex items-center justify-center text-center border-primary max-h-xs max-w-xs" variant="outline">
+          Subscribed
+        </Badge> */}
         {/* <div className="flex justify-between">
           <p>Likes Section</p>
           {process.env.FEATURE_ENABLE_TIPPING_TOKEN ? <p>Tips Section</p> : null}
