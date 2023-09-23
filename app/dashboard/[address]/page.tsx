@@ -23,6 +23,8 @@ export default function Page({ params }: { params: { address: string } }) {
         }
       );
       const jsonUrls = JSON.parse(await data.json());
+
+      console.log(jsonUrls);
       const groupedContent = jsonUrls.presignedUrls.reduce((acc: { [key: string]: ContentKey[] }, curr: ContentKey) => {
         if (!acc[curr.id]) {
           acc[curr.id] = [];
