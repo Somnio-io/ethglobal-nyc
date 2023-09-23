@@ -1,1 +1,4 @@
-starting point for contract
+# Linkt.tv
+
+- `npx hardhat compile`
+- `npx hardhat test`
