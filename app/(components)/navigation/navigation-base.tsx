@@ -41,38 +41,32 @@ function NavigationBase() {
   }
 
   return (
-    <nav className="fixed bottom-0 w-full px-4 py-2 bg-primary items-center flex z-40" aria-label="Main navigation">
+    <nav className="fixed bottom-0 w-full px-4  bg-primary items-center flex z-40" aria-label="Main navigation">
       <div className="flex mx-auto w-full justify-between">
         <Link href="/" legacyBehavior passHref>
-          <a aria-label="Home" className=" flex-col p-2 h-full flex items-center z-60 cursor-pointer">
-            <HomeIcon className="h-6 w-6 mb-0.5  hover:bg-primary/90" />
-            <label className="text-small">Home</label>
+          <a aria-label="Home" className="p-2 text-small flex flex-col items-center justify-center  hover:bg-pink-600 ">
+            <HomeIcon className="h-6 w-6 mb-0.5  " />
+            Home
           </a>
         </Link>
 
         <Link href={`/dashboard/${account}`} legacyBehavior passHref>
           <a
             aria-label="Dashboard"
-            className={`  hover:bg-primary/90 p-2 h-full flex flex-col items-center z-60  ${
+            className={`p-2 text-small flex flex-col items-center justify-center  hover:bg-pink-600 ${
               isAuthed ? "cursor-pointer opacity-100" : "cursor-not-allowed opacity-50"
             }`}
             aria-disabled={!isAuthed}
           >
             <DashboardIcon className="h-6 w-6 mb-0.5" />
-            <label className="text-small">Dashboard</label>
+            Dashboard
           </a>
         </Link>
 
         <Link href={`/dashboard/${account}`} legacyBehavior passHref>
-          <a
-            aria-label="Settings"
-            className={` hover:bg-primary/90 p-2 h-full flex flex-col items-center z-60  ${
-              isAuthed ? "cursor-pointer opacity-100" : "cursor-not-allowed opacity-50"
-            }`}
-            aria-disabled={!isAuthed}
-          >
+          <a aria-label="Settings" className="p-2 text-small flex flex-col items-center justify-center  hover:bg-pink-600 " aria-disabled={!isAuthed}>
             <GearIcon className="h-6 w-6 mb-0.5" />
-            <label className="text-small">Settings</label>
+            Settings
           </a>
         </Link>
 
@@ -104,17 +98,17 @@ function NavigationBase() {
               onClick={() => setShowButtons(!showButtons)}
               aria-expanded={showButtons}
               aria-label="Toggle additional options"
-              className={`p-1  flex items-center rounded-full z-60 ${isAuthed}? "opacity-100 cursor-pointer":"opacity-50 cursor-not-allowed"`}
+              className={`p-1 hover:bg-pink-600 flex items-center rounded-full z-60 ${isAuthed}? "opacity-100 cursor-pointer":"opacity-50 cursor-not-allowed"`}
             >
-              <PlusCircledIcon className="h-8 w-8 bg-primary rounded-full  border-primary  hover:bg-primary/90" />
+              <PlusCircledIcon className="h-8 w-8 bg-primary rounded-full  border-primary " />
             </button>
           </PopoverTrigger>
 
-          <PopoverContent className="flex flex-col bg-primary stroke-0">
+          <PopoverContent className="flex flex-col bg-primary border-none">
             <Link href={`/dashboard/${account}/upload`} legacyBehavior passHref>
               <a
                 aria-label="Upload"
-                className={`p-2 flex hover:bg-pink-700 ${isAuthed ? "cursor-pointer" : "cursor-not-allowed"}`}
+                className={`p-2 flex hover:bg-pink-600 ${isAuthed ? "cursor-pointer" : "cursor-not-allowed"}`}
                 aria-disabled={!isAuthed}
               >
                 <UploadIcon className="h-6 w-6 ml-4" />
