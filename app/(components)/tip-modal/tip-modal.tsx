@@ -14,6 +14,7 @@ import { useState } from "react";
 
 export function TipModal() {
   const [selectedToken, setSelectedToken] = useState(null);
+  const [inputTip, setInputTip] = useState("0");
 
   const { config } = usePrepareContractWrite({
     address: "0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2",
@@ -79,7 +80,7 @@ export function TipModal() {
             <Label htmlFor="tip-value" className="text-right">
               How much
             </Label>
-            <Input id="tip-value" value="0" className="col-span-2" />
+            <Input id="tip-value" value={inputTip} className="col-span-2" onChange={(e) => setInputTip(e.target.value)} />
           </div>
         </div>
         <DialogFooter>
