@@ -53,18 +53,31 @@ export default function Page({ params }: { params: { id: string } }) {
   const video = content.find((video) => video);
   return (
     content && (
-      <div className="grid grid-cols-1">
-        <div className="justify-between">
-          <p>{video?.name}</p>
+      <div className="grid grid-cols-4">
+        <div className="col-span-4">
+          <video
+            controls={true}
+            muted={false}
+            autoPlay={true}
+            width={550}
+            height={550}
+            loop={false}
+            playsInline={true}
+            poster={video?.placeholderUrl}
+          >
+            <source src={video?.url} type="video/mp4" />
+          </video>
         </div>
-        <video controls={true} muted={false} autoPlay={true} width={550} height={550} loop={false} playsInline={true} poster={video?.placeholderUrl}>
-          <source src={video?.url} type="video/mp4" />
-        </video>
-        <div className="flex justify-between">
+        <div className="cols-span-2 justify-between mt-5 ">
+          <h3 className="font-semibold capitalize text-wrap mb-1">{video?.name}</h3>
+          <p className="text"> author</p>
+        </div>
+        <p className="mt-5 text-regular col-span-4 text-wrap">{video?.description}</p>
+        {/* <div className="flex justify-between">
           <p>Likes Section</p>
           {process.env.FEATURE_ENABLE_TIPPING_TOKEN ? <p>Tips Section</p> : null}
         </div>
-        <p className="mt-4">{video?.description}</p>
+        <p className="mt-4">{video?.description}</p> */}
       </div>
     )
   );
