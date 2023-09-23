@@ -11,9 +11,8 @@ import { DefaultInput } from "../input/default-input";
 import { AudienceSelector } from "../audience-selector/audience-selector";
 import SparkMD5 from "spark-md5";
 import { ProgressBar } from "../progress/progress-bar";
-// import ethers from 'ethers'
-import { Contract } from "ethers";
-import { useContractRead, useContractWrite, usePrepareContractWrite, useWalletClient } from "wagmi";
+import { useContractRead, useContractWrite } from "wagmi";
+import { useRouter } from "next/navigation";
 
 async function calculateMD5(file: File): Promise<string> {
   return new Promise<string>((resolve, reject) => {
@@ -67,10 +66,7 @@ export enum EAudience {
 export const audiences: EAudience[] = [EAudience.ALL, EAudience.HOLDERS, EAudience.TRAIT, EAudience.TOKEN];
 
 export function UploadVideo() {
-  // const { data: signer } = useSigner()
-  // const { data: walletClient, isError, isLoading } = useWalletClient()
-
-  // Bring in the transaction we want to call here from a useContract
+  const router = useRouter();
   const [uploadStatus, setUploadStatus] = useState("");
   const [uploadName, setUploadName] = useState("");
   const [progress, setProgress] = useState(0);
@@ -203,10 +199,12 @@ export function UploadVideo() {
           return; // Return, dont continue to upload anything
         }
         // After a successful video being published, remove the discovery cache
-        const revalidate = await fetch("/dashboard/api/revalidate?tag=discovery&secret=foobar", {
+        const req = await fetch("/dashboard/api/revalidate?tag=discovery&secret=foobar", {
           method: "POST",
         });
-        console.log(revalidate);
+        if (req.ok) {
+          router.replace(`/`);
+        }
         setUploadStatus("Successfully uploaded file.");
       } else {
         setUploadStatus("Failed to upload file.");

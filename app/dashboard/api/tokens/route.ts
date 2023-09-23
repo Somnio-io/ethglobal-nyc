@@ -4,8 +4,11 @@ import { Core } from "@quicknode/sdk";
 import { Network, Alchemy } from "alchemy-sdk";
 import { fetchQuery, init } from "@airstack/node";
 
-interface FormattedCollection {
-  [contractAddress: string]: FormattedToken[];
+export interface FormattedCollection {
+  [contractAddress: string]: {
+    tokens: FormattedToken[];
+    selected?: string;
+  };
 }
 
 export interface FormattedToken {
@@ -14,7 +17,6 @@ export interface FormattedToken {
   id: string;
   image: string;
   thumbnail: string;
-  selected?: boolean;
 }
 
 export async function GET(request: NextRequest) {
@@ -118,7 +120,7 @@ export async function GET(request: NextRequest) {
 
     for (const token of data.Ethereum.TokenBalance) {
       if (!result[token.tokenAddress]) {
-        result[token.tokenAddress] = [];
+        result[token.tokenAddress] = { tokens: [], selected: "" };
       }
       console.log("Token => ", token);
       const _token: FormattedToken = {
@@ -128,7 +130,7 @@ export async function GET(request: NextRequest) {
         image: token.tokenNfts.contentValue.image ? token.tokenNfts.contentValue.image.small : "",
         thumbnail: token.tokenNfts.contentValue.image ? token.tokenNfts.contentValue.image.small : "",
       };
-      result[token.tokenAddress].push(_token);
+      result[token.tokenAddress].tokens.push(_token);
     }
 
     console.log("Result =>", result);

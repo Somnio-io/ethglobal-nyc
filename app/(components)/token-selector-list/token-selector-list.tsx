@@ -2,163 +2,13 @@
 import Image from "next/image";
 
 import { useEffect, useState } from "react";
-import { useContractRead } from "wagmi";
+import { useContractRead, useContractWrite, usePrepareContractWrite } from "wagmi";
 import { LINKT_ABI } from "@/(lib)/utils";
-import { FormattedToken } from "@/dashboard/api/tokens/route";
+import { FormattedCollection, FormattedToken } from "@/dashboard/api/tokens/route";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 
 interface TokenSelectorListProps {
   account: string;
-}
-
-// interface QNApiResponse {
-//   tokens: QNToken[];
-// }
-
-// interface QNToken {
-//   collectionName: string;
-//   collectionTokenId: string;
-//   collectionAddress: string;
-//   name: string;
-//   description: string;
-//   imageUrl: string;
-//   traits: any[];
-//   chain: string;
-//   network: string;
-// }
-
-interface AlchemyNFTResponse {
-  tokens: AlchemyNFT[];
-}
-
-export interface AlchemyNFT {
-  contract: Contract;
-  tokenId: string;
-  tokenType: string;
-  title: string;
-  description: string;
-  timeLastUpdated: string;
-  rawMetadata: RawMetadata;
-  tokenUri: TokenUri;
-  media: Media[];
-  balance: number;
-  metadataError?: string;
-  spamInfo?: SpamInfo;
-}
-
-interface SpamInfo {
-  isSpam: boolean;
-  classifications?: string[];
-}
-
-interface Media {
-  gateway: string;
-  raw: string;
-  format: string;
-  thumbnail: string;
-  bytes: number;
-}
-
-interface TokenUri {
-  gateway: string;
-  raw: string;
-}
-
-interface RawMetadata {
-  name?: string;
-  description?: string;
-  image?: string;
-  animation_url?: string;
-  attributes?: Attribute[] | any[] | Attributes3[] | Attributes4[] | Attributes5 | Attributes6[];
-  external_url?: string;
-  image_details?: Imagedetails;
-  image_url?: string;
-  created_by?: string;
-  edition?: number;
-  provenance?: string;
-  background_image?: string;
-  last_request_date?: number;
-  is_normalized?: boolean;
-  version?: number;
-  url?: string;
-  metadata?: any[];
-  thumbnail?: string;
-  compiler?: string;
-  symbol?: string;
-  date?: number;
-  author?: string;
-  properties?: Properties;
-}
-
-interface Properties {
-  name: string;
-  number: number;
-}
-
-interface Imagedetails {
-  format: string;
-  width: number;
-  sha256: string;
-  bytes: number;
-  height: number;
-}
-
-interface Attributes6 {
-  display_type: string;
-  value: number | string;
-  trait_type: string;
-}
-
-interface Attributes5 {
-  head: string;
-  glasses: string;
-  jewelry: string;
-  ears: string;
-  id_hash: number;
-  body: string;
-}
-
-interface Attributes4 {
-  value: string;
-  trait_type: string;
-}
-
-interface Attributes3 {
-  value: number | string;
-  trait_type: string;
-}
-
-interface Attribute {
-  value: number | string;
-  trait_type: string;
-  display_type?: string;
-}
-
-interface Contract {
-  address: string;
-  tokenType: string;
-  openSea: OpenSea;
-  contractDeployer: string;
-  deployedBlockNumber: number;
-  name?: string;
-  symbol?: string;
-  totalSupply?: string;
-}
-
-interface OpenSea {
-  floorPrice?: number;
-  collectionName?: string;
-  safelistRequestStatus?: string;
-  imageUrl?: string;
-  description?: string;
-  externalUrl?: string;
-  twitterUsername?: string;
-  discordUrl?: string;
-  lastIngestedAt: string;
-}
-
-export interface FormattedCollections {
-  [contractAddress: string]: AlchemyNFT[];
 }
 
 interface FormattedSelection {
@@ -179,16 +29,17 @@ export function TokenSelector(tokens: any[]) {
   if (!_tokens.length) return null;
 
   return (
-    <div
-      className={`flex items-center gap-10 hover:opacity-50 h-[50px] cursor-pointer stroke-primary stroke-2 bg-transparent border ${
-        selected ? "border-green-500" : "border-red-500"
-      }`}
-    >
+    // <div
+    //   className={`flex items-center gap-10 hover:opacity-50 h-[50px] cursor-pointer stroke-primary stroke-2 bg-transparent border ${
+    //     selected ? "border-green-500" : "border-red-500"
+    //   }`}
+    // >
+    <>
       {/* <Checkbox /> */}
       <DropdownMenu>
         <DropdownMenuTrigger className={`w-full m-5`} asChild>
           <span>
-            {_tokens[0].name} {selected ? selected.id : null}
+            {_tokens[0].name} {_tokens[0].selected}
           </span>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
@@ -200,14 +51,14 @@ export function TokenSelector(tokens: any[]) {
           ))}
         </DropdownMenuContent>
       </DropdownMenu>
-    </div>
+    </>
   );
 }
 
 export function TokenSelectorList({ account }: TokenSelectorListProps) {
   const [loading, setLoading] = useState(true);
   const [selectedTokens, setSelectedTokens] = useState<FormattedSelection>({ contracts: [], tokens: [] });
-  const [content, setContent] = useState<FormattedCollections>({});
+  const [content, setContent] = useState<FormattedCollection>({});
 
   useEffect(() => {
     const _fetch = async () => {
@@ -227,13 +78,33 @@ export function TokenSelectorList({ account }: TokenSelectorListProps) {
     _fetch();
   }, []);
 
+  const handleSave = () => {
+    // const { config } = usePrepareContractWrite({
+    //   address: process.env.NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS as `0x${string}`,
+    //   abi: LINKT_ABI,
+    //   functionName: "addUserTokenMapping",
+    // });
+
+    const { data, write } = useContractWrite({
+      enabled: false,
+      address: process.env.NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS as `0x${string}`,
+      abi: LINKT_ABI,
+      functionName: "addUserTokenMapping",
+    });
+    write();
+  };
+
   useContractRead({
     abi: LINKT_ABI,
     enabled: Boolean(true),
     functionName: "getUserTokenMapping",
     onSuccess(data: any) {
       console.log("DATAAAAA ::::", data);
-      setSelectedTokens({ contracts: data[0], tokens: data[1] });
+      if (data[0].length && data[1].length) {
+        for (let i = 0; i < data[0].length; i++) {
+          content[data[0][i]].selected = data[1][i];
+        }
+      }
     },
     args: [account],
     address: process.env.NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS as `0x${string}`,
@@ -248,7 +119,45 @@ export function TokenSelectorList({ account }: TokenSelectorListProps) {
   return (
     <>
       <div className={`max-h-[225px] overflow-y-scroll`}>
-        {Object.values(content).length ? Object.values(content).map((tokens, i) => <TokenSelector key={i} {...tokens} />) : null}
+        {Object.values(content).length
+          ? Object.values(content).map((tokens, i) => (
+              <div
+                key={tokens.tokens[0].address}
+                className={`flex items-center gap-10 hover:opacity-50 h-[50px] cursor-pointer stroke-primary stroke-2 bg-transparent border ${
+                  tokens.selected !== "" ? "border-green-500" : "border-red-500"
+                }`}
+              >
+                <DropdownMenu>
+                  <DropdownMenuTrigger className={`w-full m-5`} asChild>
+                    <span>
+                      {tokens.tokens[0].name} {tokens.selected}
+                    </span>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    {tokens.tokens.map((token) => (
+                      <DropdownMenuItem
+                        key={token.id}
+                        onClick={() => {
+                          setContent((prev) => {
+                            return {
+                              ...prev,
+                              [token.address]: {
+                                ...prev[token.address],
+                                selected: token.id,
+                              },
+                            };
+                          });
+                        }}
+                      >
+                        <Image unoptimized={true} src={token.thumbnail} height={50} width={50} alt={token.id} />
+                        {token.id}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            ))
+          : null}
       </div>
       <button className="mt-5 border border-white h-[50px]">SAVE</button>
     </>
