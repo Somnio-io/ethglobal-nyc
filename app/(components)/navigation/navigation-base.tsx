@@ -104,21 +104,21 @@ function NavigationBase() {
             </button>
           </PopoverTrigger>
 
-          <PopoverContent className="flex flex-col bg-primary border-none">
+          <PopoverContent className="flex flex-col bg-primary border-none p-0 overflow-hidden">
             <Link href={`/dashboard/${account}/upload`} legacyBehavior passHref>
               <a
                 aria-label="Upload"
-                className={`p-2 flex hover:bg-pink-600 ${isAuthed ? "cursor-pointer" : "cursor-not-allowed"}`}
+                className={`p-4 flex hover:bg-pink-600 text-small ${isAuthed ? "cursor-pointer" : "cursor-not-allowed"}`}
                 aria-disabled={!isAuthed}
               >
                 <UploadIcon className="h-6 w-6 ml-4" />
-                <label className="text-small">Upload</label>
+                Upload
               </a>
             </Link>
             <Link href={`/dashboard/${account}/live`} legacyBehavior passHref>
               <a
                 aria-label="Go Live"
-                className={` hover:bg-pink-700  p-2 flex  w-full  items-center  ${isAuthed ? "cursor-pointer" : "cursor-not-allowed"} `}
+                className={`p-4 hover:bg-pink-600 text-small   flex  w-full  items-center  ${isAuthed ? "cursor-pointer" : "cursor-not-allowed"} `}
                 aria-disabled={!isAuthed}
               >
                 <svg className="h-6 w-6 ml-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -131,7 +131,7 @@ function NavigationBase() {
                     strokeLinejoin="round"
                   />
                 </svg>
-                <label className="text-small">Go Live</label>
+                Go Live
               </a>
             </Link>
           </PopoverContent>
