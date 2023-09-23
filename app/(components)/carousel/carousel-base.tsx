@@ -24,7 +24,7 @@ function CarouselBase({ name, content }: CarouselBaseProps) {
             content.map((_content, i) => (
               <Link
                 href={{
-                  pathname: _content.live ? `/live/${_content.id}` : `/watch/${_content.id}`,
+                  pathname: `/watch/${_content.id}`,
                   query: { publisher: _content.publisher },
                 }}
                 key={`link-${_content.id}`}
