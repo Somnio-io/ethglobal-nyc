@@ -8,9 +8,29 @@ import { Button } from "@/(components)/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/(components)/ui/dialog";
 import { Input } from "@/(components)/ui/input";
 import { Label } from "@/(components)/ui/label";
+import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from "wagmi";
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 export function TipModal() {
-  const { setTheme } = useTheme();
+  const { config } = usePrepareContractWrite({
+    address: "0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2",
+    abi: [
+      {
+        name: "tip",
+        type: "function",
+        stateMutability: "nonpayable",
+        inputs: [],
+        outputs: [],
+      },
+    ],
+    functionName: "tip",
+  });
+
+  const { data, write } = useContractWrite(config);
+
+  const { isLoading, isSuccess } = useWaitForTransaction({
+    hash: data?.hash,
+  });
 
   return (
     <Dialog>
@@ -37,9 +57,17 @@ export function TipModal() {
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit">Save changes</Button>
+          <Button type="submit" onClick={() => write?.()} disabled={!write || isLoading}>
+            {isLoading ? <ReloadIcon className="mr-2 h-4 w-4 animate-spin" /> : "Tip"}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
+}
+{
+  /* <Button disabled>
+<ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+Please wait
+</Button> */
 }
