@@ -93,6 +93,3 @@ export default function Page({ params }: { params: { id: string } }) {
     )
   );
 }
-{
-  /* <Button variant="secondary">Tip</Button> */
-}
