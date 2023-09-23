@@ -22,6 +22,11 @@ When thinking of how to best build Linkt.tv we wanted to ensure we stood on the 
 
 # How are we working with Video Content?
 
+# Minting Sites
+
+- https://jims-trading.metafuse.me/ (owner -> 0x4c3c64dA062a4Ace3C7e1c0201f7A54cBA4718d3)
+- https://onlyfrens.metafuse.me/ (owner -> 0x5664A51EcA6a9FdD0207487607F86E79dbe9b348)
+
 # Public URL
 
 - add this
