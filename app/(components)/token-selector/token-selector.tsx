@@ -7,10 +7,10 @@ import { useState } from "react";
 import { FormattedToken } from "@/dashboard/api/tokens/route";
 
 export function TokenSelector(tokens: any[]) {
-  const [selected, setSelected] = useState<FormattedToken>()
+  const [selected, setSelected] = useState<FormattedToken>();
   const _tokens = Object.values(tokens);
 
-  console.log("Collection =>", _tokens)
+  //console.log("Collection =>", _tokens)
 
   if (!_tokens) {
     return <p>Loading...</p>;
@@ -19,22 +19,22 @@ export function TokenSelector(tokens: any[]) {
   if (!_tokens.length) return null;
 
   return (
-    <div className={`flex items-center gap-10 hover:opacity-50 h-[50px] cursor-pointer stroke-primary stroke-2 bg-transparent border ${selected ? "border-green-500" : "border-red-500"}`}>
+    <div
+      className={`flex items-center gap-10 hover:opacity-50 h-[50px] cursor-pointer stroke-primary stroke-2 bg-transparent border ${
+        selected ? "border-green-500" : "border-red-500"
+      }`}
+    >
       {/* <Checkbox /> */}
       <DropdownMenu>
         <DropdownMenuTrigger className={`w-full m-5`} asChild>
-          <span>{_tokens[0].name} { selected ? selected.id : null }</span>
+          <span>
+            {_tokens[0].name} {selected ? selected.id : null}
+          </span>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           {_tokens.map((token) => (
             <DropdownMenuItem key={token.id} onClick={() => setSelected(token)}>
-              <Image
-                unoptimized={true}
-                src={token.thumbnail}
-                height={50}
-                width={50}
-                alt={token.tokenId}
-              />
+              <Image unoptimized={true} src={token.thumbnail} height={50} width={50} alt={token.tokenId} />
               {token.id}
             </DropdownMenuItem>
           ))}

@@ -1,29 +1,17 @@
 import { MaxUint256 } from "ethers";
 import { useMemo } from "react";
-import {
-  useContractRead,
-  useContractWrite,
-  usePrepareContractWrite,
-  useWaitForTransaction,
-  erc20ABI,
-  erc721ABI,
-} from "wagmi";
+import { useContractRead, useContractWrite, usePrepareContractWrite, useWaitForTransaction, erc20ABI, erc721ABI } from "wagmi";
 
 interface ContractDetails {
   abi: string[];
   address: `0x${string}`;
 }
 
-const FEATURE_ENABLE_TIPPING_TOKEN = process.env
-  .FEATURE_ENABLED_TIPPING_TOKEN as unknown as boolean;
+const FEATURE_ENABLE_TIPPING_TOKEN = process.env.FEATURE_ENABLED_TIPPING_TOKEN as unknown as boolean;
 
-const FEATURE_ENABLE_TIPPING_TOKEN_ADDRESS = process.env
-  .FEATURE_ENABLED_TIPPING_TOKEN_ADDRESS as unknown as `0x${string}`;
+const FEATURE_ENABLE_TIPPING_TOKEN_ADDRESS = process.env.FEATURE_ENABLED_TIPPING_TOKEN_ADDRESS as unknown as `0x${string}`;
 
-export function useContract(
-  contractDetails: ContractDetails,
-  usersWalletAddress: `0x${string}` | undefined
-) {
+export function useContract(contractDetails: ContractDetails, usersWalletAddress: `0x${string}` | undefined) {
   // Get the allowance of the payment token
   const {
     data: allowanceOf,
@@ -46,24 +34,18 @@ export function useContract(
     args: [contractDetails.address, MaxUint256],
   });
 
-  const {
-    data: approvePaymentTokenSpendData,
-    write: approvePaymentTokenSpendDataWrite,
-  } = useContractWrite(prepareApproveOfPaymentToken);
+  const { data: approvePaymentTokenSpendData, write: approvePaymentTokenSpendDataWrite } = useContractWrite(prepareApproveOfPaymentToken);
 
-  const { isLoading: approvePaymentTokenSpendTransaction } =
-    useWaitForTransaction({
-      hash: approvePaymentTokenSpendData?.hash,
-      enabled: FEATURE_ENABLE_TIPPING_TOKEN,
-      onSuccess: async () => {
-        await refetchAllowanceOf();
-      },
-    });
+  const { isLoading: approvePaymentTokenSpendTransaction } = useWaitForTransaction({
+    hash: approvePaymentTokenSpendData?.hash,
+    enabled: FEATURE_ENABLE_TIPPING_TOKEN,
+    onSuccess: async () => {
+      await refetchAllowanceOf();
+    },
+  });
 
   const isLoading = useMemo(() => {
-    return [approvePaymentTokenSpendTransaction, allowanceOfLoading].some(
-      (loading) => loading
-    );
+    return [approvePaymentTokenSpendTransaction, allowanceOfLoading].some((loading) => loading);
   }, [approvePaymentTokenSpendTransaction, allowanceOfLoading]);
 
   return {

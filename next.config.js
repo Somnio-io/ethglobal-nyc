@@ -23,11 +23,11 @@ const Networks = {
 };
 
 const deployedContractAddress = {
-  MATIC_MAINNET: "",
+  MATIC_MAINNET: "0x07F0c0C9eFC242FaD26Ab0e91e38ea3D73cBd267",
   MATIC_MUMBAI: "0x53D877fcFA8C0D38F9551cB0437b42C54DB1D060",
 };
 
-const deployedContract = "0x53D877fcFA8C0D38F9551cB0437b42C54DB1D060";
+const deployedContract = "0x07F0c0C9eFC242FaD26Ab0e91e38ea3D73cBd267";
 const currentNodeEndpoint = "";
 
 console.log(`Contract is -> ${deployedContract}`);
@@ -39,7 +39,7 @@ const nextConfig = {
   env: {
     FEATURE_QUICKNODE_ENDPOINT: currentNodeEndpoint,
     FEATURE_ENABLE_GASLESS_TRANSACTIONS: false, // https://ethglobal.com/events/newyork2023/prizes#biconomy
-
+    FEATURE_TARGET_NETWORK: Networks["MATIC_MAINNET"],
     FEATURE_ENABLE_QUICKNODE: false, // https://ethglobal.com/events/newyork2023/prizes/quicknode-64ekr
     FEATURE_ENABLE_ALCHEMY: false, // No bounty - but required for access to many chains ERC721 data
     FEATURE_ENABLE_AIRSTACK: true, // https://ethglobal.com/events/newyork2023/prizes#airstack

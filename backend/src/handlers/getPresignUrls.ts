@@ -1,16 +1,10 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
-import {
-  authUserToken,
-  createApiGatewayResponse,
-  getItem,
-  getObjectMetadata,
-  getPreSignedUrl,
-  listS3Objects,
-  readFileFromS3,
-} from "./utils";
+import { authUserToken, createApiGatewayResponse, getItem, getObjectMetadata, getPreSignedUrl, listS3Objects, readFileFromS3 } from "./utils";
 import { S3Client } from "@aws-sdk/client-s3";
+import ethers from "ethers";
+import { LINKT_ABI } from "../abi/ABI";
 
 const BUCKET_NAME = process.env.BUCKET_NAME as string;
 
@@ -86,27 +80,31 @@ export const getPresignUrls: APIGatewayProxyHandler = async (event) => {
   }
 
   const presignedUrls: ContentKey[] = [];
-  let action = await determineAction(
-    requestedContract,
-    videoId,
-    publisher,
-    token
-  );
+  let action = await determineAction(requestedContract, videoId, publisher, token);
 
   if (!action) {
-    return createApiGatewayResponse(
-      403,
-      JSON.stringify({ message: "Invalid User" })
-    );
+    return createApiGatewayResponse(403, JSON.stringify({ message: "Invalid User" }));
   }
+
+  // call getUserTokenMapping.
+  // For each
+  // const [mappedAddresses, mappedTokenIds] = await linkt.getUserTokenMapping(owner.address);
+  // const mappedTokenIdsAsNumbers = mappedTokenIds.map((id) => id.toNumber());
+  // // Assert the correctness of the mapped addresses and token IDs
+  // expect(mappedAddresses).to.include.members([erc721Mock.address, erc721Mock2.address]);
+
+  const lowerCaseAddress = (await authUserToken(token)) || "unauthorized";
+  const provider = new ethers.JsonRpcProvider(process.env.RPC_ENDPOINT);
+  const contract = new ethers.Contract(process.env.DEPLOYED_CONTRACT_ADDRESS as string, LINKT_ABI, provider);
+  const data = await contract.listPublications(requestedContract, lowerCaseAddress);
+  console.log(data);
 
   try {
     const s3Objects = await listS3Objects(BUCKET_NAME, action.path, s3);
 
     for (const item of s3Objects) {
       if (item.Key) {
-        const { name, description, audience, publisher, live } =
-          await getObjectMetadata(BUCKET_NAME, item.Key, s3);
+        const { name, description, audience, publisher, live } = await getObjectMetadata(BUCKET_NAME, item.Key, s3);
 
         // We are in discovery, dont add things that are not available to ALL audiences
         if (action.path === `uploads/` && audience !== "ALL") {
@@ -116,13 +114,7 @@ export const getPresignUrls: APIGatewayProxyHandler = async (event) => {
         // Generate presigned URL for each file
         const expiresIn = 60 * 60; // URL will expire in 1 hour
         // For the item, get its metadata and from the metadata get
-        const presignedUrl = await getPreSignedUrl(
-          BUCKET_NAME,
-          item.Key,
-          expiresIn,
-          s3,
-          "GET"
-        );
+        const presignedUrl = await getPreSignedUrl(BUCKET_NAME, item.Key, expiresIn, s3, "GET");
 
         presignedUrls.push({
           id: getLastPartOfPath(item.Key) as string,
@@ -132,12 +124,7 @@ export const getPresignUrls: APIGatewayProxyHandler = async (event) => {
           publisher,
           live,
           data: {
-            url: live
-              ? await readFileFromS3(
-                  { bucketName: BUCKET_NAME, key: item.Key },
-                  s3
-                )
-              : presignedUrl,
+            url: live ? await readFileFromS3({ bucketName: BUCKET_NAME, key: item.Key }, s3) : presignedUrl,
             created: item.LastModified,
             size: item.Size,
             extension: getExtensionOfPath(item.Key) as string,
@@ -147,16 +134,10 @@ export const getPresignUrls: APIGatewayProxyHandler = async (event) => {
     }
   } catch (error) {
     console.log(error);
-    return createApiGatewayResponse(
-      500,
-      JSON.stringify({ message: "Internal Server Error" })
-    );
+    return createApiGatewayResponse(500, JSON.stringify({ message: "Internal Server Error" }));
   }
 
-  return createApiGatewayResponse(
-    200,
-    JSON.stringify({ message: "OK", presignedUrls })
-  );
+  return createApiGatewayResponse(200, JSON.stringify({ message: "OK", presignedUrls }));
 };
 
 interface Action {
@@ -165,20 +146,12 @@ interface Action {
   lowerCaseAddress?: string;
 }
 
-async function determineAction(
-  requestedContract: string | undefined,
-  videoId: string | undefined,
-  publisher: string | undefined,
-  token: string
-) {
+async function determineAction(requestedContract: string | undefined, videoId: string | undefined, publisher: string | undefined, token: string) {
   let action;
 
   if (requestedContract) {
     const lowerCaseAddress = await authUserToken(token);
-    if (
-      !lowerCaseAddress ||
-      lowerCaseAddress !== requestedContract.toLowerCase()
-    ) {
+    if (!lowerCaseAddress || lowerCaseAddress !== requestedContract.toLowerCase()) {
       return null;
     }
     action = {

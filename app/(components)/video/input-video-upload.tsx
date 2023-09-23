@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { Input } from "@/(components)/ui/input";
 import { Label } from "@/(components)/ui/label";
@@ -84,6 +84,10 @@ export function UploadVideo() {
   const [videoData, handleVideoFileChange] = useFileWithSource();
   const [placeholderData, handlePlaceholderFileChange] = useFileWithSource();
 
+  const MemoizedProgressBar = useMemo(() => {
+    return progress > 0 ? <ProgressBar progress={progress} /> : null;
+  }, [progress]);
+
   useEffect(() => {
     const _fetch = async () => {
       const token = localStorage.getItem("token");
@@ -120,19 +124,10 @@ export function UploadVideo() {
     address: process.env.NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS as `0x${string}`,
   }) as any;
 
-  // console.log(`Publication Count! `, publicationCount);
-  console.log(Boolean(uploadName && uploadDescription && selectedAudience && fileHash));
-  const { config, refetch } = usePrepareContractWrite({
+  const { isSuccess, write } = useContractWrite({
+    address: process.env.NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS as `0x${string}`,
     abi: LINKT_ABI,
     functionName: "publishVideo",
-    onSuccess(data) {
-      console.log(data);
-    },
-    onError(err) {
-      console.log(err);
-    },
-
-    enabled: Boolean(uploadName && uploadDescription && selectedAudience && fileHash),
     args: [
       nextPublicationId, // VideoId - always just increment what is existing
       fileHash,
@@ -142,41 +137,7 @@ export function UploadVideo() {
         tokenId: 0, // Only for token publishing
       },
     ],
-    address: process.env.NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS as `0x${string}`,
   });
-
-  const { data, isLoading, isSuccess, error, isError, write, reset, variables } = useContractWrite({
-    ...config,
-    // address: process.env.NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS as `0x${string}`,
-    // abi: LINKT_ABI,
-    // functionName: "publishVideo",
-    // args: [
-    //   nextPublicationId, // VideoId - always just increment what is existing
-    //   fileHash,
-    //   connectedContract,
-    //   {
-    //     audienceType: audiences.indexOf(selectedAudience) + 1,
-    //     tokenId: 0, // Only for token publishing
-    //   },
-    // ],
-    onSuccess(data1, variables, context) {
-      console.log(`success`);
-
-      console.log(data1);
-      console.log(data);
-    },
-    onError(error1, variables, context) {
-      console.log(`error`);
-
-      console.log(data);
-      console.log(error1);
-    },
-    onSettled(data, error, variables, context) {
-      console.log(`Settle`);
-      console.log(data, error, variables, context);
-    },
-  });
-  console.log(`Output`, data, error);
 
   const handleUpload = async () => {
     const token = localStorage.getItem("token");
@@ -203,16 +164,6 @@ export function UploadVideo() {
     });
     const videoPreSignedUrlData = JSON.parse(await videoPreSignedUrl.json());
 
-    try {
-      console.log(`Calling write!`);
-      console.log(nextPublicationId, md5Hash, connectedContract, selectedAudience);
-      refetch?.();
-      write?.(); // Publish Video content to contract
-    } catch (error) {
-      console.log(`Error!`, error);
-      return; // Return, dont continue to upload anything
-    }
-
     if (placeholderData.file) {
       const placeholderPresignUrl = await fetch(UPLOAD_URL, {
         method: "GET",
@@ -230,9 +181,6 @@ export function UploadVideo() {
     try {
       let response;
       if (token) {
-        // Make a contract call here to publish video
-        // If the user declines, dont upload.
-
         response = await fetch(videoPreSignedUrlData.uploadUrl, {
           method: "PUT",
           body: videoData.file,
@@ -243,6 +191,15 @@ export function UploadVideo() {
       }
 
       if (response?.ok) {
+        try {
+          write?.(); // Publish Video content to contract
+          if (isSuccess) {
+            console.log(`Success!`);
+          }
+        } catch (error) {
+          console.log(`Error!`, error);
+          return; // Return, dont continue to upload anything
+        }
         // After a successful video being published, remove the discovery cache
         const revalidate = await fetch("/dashboard/api/revalidate?tag=discovery&secret=foobar", {
           method: "POST",
@@ -292,7 +249,7 @@ export function UploadVideo() {
       <Button onClick={handleUpload} className="btn btn-primary">
         Upload
       </Button>
-      {progress > 0 ? <ProgressBar progress={progress} /> : null}
+      {MemoizedProgressBar}
       {uploadStatus ? <div className="text-sm text-white">{uploadStatus}</div> : null}
     </div>
   );

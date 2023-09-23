@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { TokenSelector } from "../token-selector/token-selector";
+import { useContractRead } from "wagmi";
+import { LINKT_ABI } from "@/(lib)/utils";
 
 interface TokenSelectorListProps {
   account: string;
@@ -65,13 +67,7 @@ interface RawMetadata {
   description?: string;
   image?: string;
   animation_url?: string;
-  attributes?:
-    | Attribute[]
-    | any[]
-    | Attributes3[]
-    | Attributes4[]
-    | Attributes5
-    | Attributes6[];
+  attributes?: Attribute[] | any[] | Attributes3[] | Attributes4[] | Attributes5 | Attributes6[];
   external_url?: string;
   image_details?: Imagedetails;
   image_url?: string;
@@ -191,12 +187,28 @@ export function TokenSelectorList({ account }: TokenSelectorListProps) {
         method: "GET",
         headers: {},
       });
-      const jsonData = await data.json();
-      setContent(jsonData.tokens);
+
+      if (data.ok) {
+        console.log("API: ", data);
+        // const jsonData = await data.json();
+        // setContent(jsonData.tokens);
+      }
+
       setLoading(false);
     };
     _fetch();
   }, []);
+
+  useContractRead({
+    abi: LINKT_ABI,
+    enabled: Boolean(true),
+    functionName: "getUserTokenMapping",
+    onSuccess(data: any) {
+      console.log("DATAAAAA ::::", data);
+    },
+    args: [account],
+    address: process.env.NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS as `0x${string}`,
+  }) as any;
 
   if (loading) {
     return <p>Loading..</p>;
@@ -207,11 +219,7 @@ export function TokenSelectorList({ account }: TokenSelectorListProps) {
   return (
     <>
       <div className={`max-h-[225px] overflow-y-scroll`}>
-        {Object.values(content).length
-          ? Object.values(content).map((tokens, i) => (
-              <TokenSelector {...tokens} key={i} />
-            ))
-          : null}
+        {Object.values(content).length ? Object.values(content).map((tokens, i) => <TokenSelector {...tokens} key={i} />) : null}
       </div>
       <button className="mt-5 border border-white h-[50px]">SAVE</button>
     </>
