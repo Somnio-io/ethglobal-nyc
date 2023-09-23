@@ -10,6 +10,8 @@ import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from
 import { ReloadIcon, CheckIcon } from "@radix-ui/react-icons";
 
 export function TipModal() {
+  const [selectedToken, setSelectedToken] = useState(null);
+
   const { config } = usePrepareContractWrite({
     address: "0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2",
     abi: [
@@ -29,11 +31,25 @@ export function TipModal() {
   const { isLoading, isSuccess } = useWaitForTransaction({
     hash: data?.hash,
   });
+  let buttonText = "Tip";
+  let buttonIcon = null;
+  let buttonClass = "";
+
+  if (isLoading) {
+    buttonText = "Please wait";
+    buttonIcon = <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />;
+  } else if (isSuccess) {
+    buttonText = "Successful";
+    buttonIcon = <CheckIcon className="mr-2 h-4 w-4 animate-bounce" />;
+    buttonClass = "bg-green-500";
+  }
+
+  const isDisabled = !selectedToken || !write || isLoading;
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Edit Profile</Button>
+        <Button variant="outline">Tip</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -45,36 +61,22 @@ export function TipModal() {
             <Label htmlFor="name" className="text-right">
               Currency
             </Label>
-            <Select>
+            <Select onSelect={(value) => setSelectedToken(value)}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Tip" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="dark">USDC</SelectItem>
-                <SelectItem value="light">GHO</SelectItem>
-                <SelectItem value="dark">APE</SelectItem>
+                <SelectItem value="USDC">USDC</SelectItem>
+                <SelectItem value="GHO">GHO</SelectItem>
+                <SelectItem value="APE">APE</SelectItem>
               </SelectContent>
             </Select>
           </div>
         </div>
         <DialogFooter>
-          <Button className={`${isSuccess && !isLoading}? 'bg-green-500':''`} type="submit" onClick={() => write?.()} disabled={!write || isLoading}>
-            {isLoading ? (
-              <>
-                <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-                Please wait
-              </>
-            ) : (
-              "Tip"
-            )}
-            {isSuccess ? (
-              <>
-                <CheckIcon className="mr-2 h-4 w-4 animate-bounce" />
-                Successful
-              </>
-            ) : (
-              "Tip"
-            )}
+          <Button className={buttonClass} type="submit" onClick={() => write?.()} disabled={isDisabled}>
+            {buttonIcon}
+            {buttonText}
           </Button>
         </DialogFooter>
       </DialogContent>
