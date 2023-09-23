@@ -12,14 +12,7 @@ import {
   GetObjectCommandInput,
 } from "@aws-sdk/client-s3";
 import { S3RequestPresigner } from "@aws-sdk/s3-request-presigner";
-import {
-  DynamoDBDocumentClient,
-  GetCommand,
-  PutCommand,
-  QueryCommand,
-  QueryCommandInput,
-  UpdateCommand,
-} from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, GetCommand, PutCommand, QueryCommand, QueryCommandInput, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { Readable } from "stream";
 
 const Web3Token = require("web3-token");
@@ -40,11 +33,7 @@ export interface S3FileOptions {
   metadata?: { [key: string]: string };
 }
 
-export const getObjectMetadata = async (
-  bucketName: string,
-  objectKey: string,
-  s3: S3Client
-) => {
+export const getObjectMetadata = async (bucketName: string, objectKey: string, s3: S3Client) => {
   try {
     const input = {
       Bucket: bucketName,
@@ -72,6 +61,7 @@ export const getObjectMetadata = async (
 export interface ObjectMetadata {
   hash: string;
   name: string;
+  live?: string;
   description: string;
   audience: string;
   publisher: string;
@@ -93,7 +83,7 @@ export const getPreSignedUrl = async (
     if (!metadata) {
       throw "Metadata require for PUT calls";
     }
-    const { hash, name, audience, description, publisher } = metadata;
+    const { hash, name, audience, description, publisher, live } = metadata;
 
     command = new PutObjectCommand({
       Bucket: bucketName,
@@ -104,6 +94,7 @@ export const getPreSignedUrl = async (
         audience: audience || "ALL",
         description: description || "",
         publisher: publisher || "",
+        live: live || "",
         // live doesnt need to go here since we upload this is a different manner
       },
     });
@@ -118,27 +109,19 @@ export const getPreSignedUrl = async (
   }
 
   const request = await createRequest(s3, command);
-  const signedUrl = formatUrl(
-    await signer.presign(request, { expiresIn: expires })
-  );
+  const signedUrl = formatUrl(await signer.presign(request, { expiresIn: expires }));
 
   return signedUrl;
 };
 
-export const listS3Objects = async (
-  bucketName: string,
-  prefix: string,
-  s3Client: S3Client
-) => {
+export const listS3Objects = async (bucketName: string, prefix: string, s3Client: S3Client) => {
   const listParams = {
     Bucket: bucketName,
     Prefix: prefix,
   };
 
   try {
-    const listResponse = await s3Client.send(
-      new ListObjectsV2Command(listParams)
-    );
+    const listResponse = await s3Client.send(new ListObjectsV2Command(listParams));
     return listResponse.Contents || [];
   } catch (error) {
     console.error("Error listing S3 objects: ", error);
@@ -151,10 +134,7 @@ interface S3ReadFileOptions {
   key: string;
 }
 
-export const readFileFromS3 = async (
-  options: S3ReadFileOptions,
-  s3: S3Client
-): Promise<string> => {
+export const readFileFromS3 = async (options: S3ReadFileOptions, s3: S3Client): Promise<string> => {
   const params: GetObjectCommandInput = {
     Bucket: options.bucketName,
     Key: options.key,
@@ -164,17 +144,12 @@ export const readFileFromS3 = async (
     const result = await s3.send(new GetObjectCommand(params));
 
     if (!result.Body) {
-      throw new Error(
-        `No body found for ${options.key} in ${options.bucketName}`
-      );
+      throw new Error(`No body found for ${options.key} in ${options.bucketName}`);
     }
 
     return await result.Body.transformToString();
   } catch (error) {
-    console.error(
-      `Error reading ${options.key} from ${options.bucketName}:`,
-      error
-    );
+    console.error(`Error reading ${options.key} from ${options.bucketName}:`, error);
     throw error;
   }
 };
@@ -206,9 +181,7 @@ export const mimeTypeToExtension = (mimeType: string) => {
   return mimeToExt[mimeType] || null;
 };
 
-export const authUserToken = async (
-  authroizationHeader: string | undefined
-) => {
+export const authUserToken = async (authroizationHeader: string | undefined) => {
   try {
     const { address } = await Web3Token.verify(authroizationHeader, {});
     const lowerCaseAddress = address.toLowerCase();
@@ -241,11 +214,7 @@ export const queryItems = async <T>(
   }
 };
 
-export const getItem = async <T>(
-  tableName: string,
-  key: { [key: string]: any },
-  client: DynamoDBDocumentClient
-): Promise<T | null> => {
+export const getItem = async <T>(tableName: string, key: { [key: string]: any }, client: DynamoDBDocumentClient): Promise<T | null> => {
   const getItemInput = {
     TableName: tableName,
     Key: key,
@@ -303,11 +272,7 @@ export const updateUserLiveStatus = async <T>(
   return Attributes as Partial<T>;
 };
 
-export const updateLikes = async <T>(
-  tableName: string,
-  videoId: string,
-  client: DynamoDBDocumentClient
-): Promise<Partial<T>> => {
+export const updateLikes = async <T>(tableName: string, videoId: string, client: DynamoDBDocumentClient): Promise<Partial<T>> => {
   const updateItemInput = {
     TableName: tableName,
     Key: {
@@ -337,18 +302,13 @@ export const createApiGatewayResponse = (status: number, body: any) => {
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*", // Or specify your specific origin, like "http://localhost:3000"
       "Access-Control-Allow-Credentials": true, // For cookies, authorization headers, etc.
-      "Access-Control-Allow-Headers":
-        "Content-Type,Cache-Control,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token", // What headers the client is allowed to send
+      "Access-Control-Allow-Headers": "Content-Type,Cache-Control,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token", // What headers the client is allowed to send
       "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,OPTIONS", // What methods are allowed
     },
   };
 };
 
-export const putItem = async <T>(
-  tableName: string,
-  item: Partial<T>,
-  client: DynamoDBDocumentClient
-): Promise<Partial<T>> => {
+export const putItem = async <T>(tableName: string, item: Partial<T>, client: DynamoDBDocumentClient): Promise<Partial<T>> => {
   const putItemInput = {
     TableName: tableName,
     Item: item,
@@ -358,10 +318,7 @@ export const putItem = async <T>(
   return item;
 };
 
-export const writeFileToS3 = async (
-  options: S3FileOptions,
-  s3: S3Client
-): Promise<void> => {
+export const writeFileToS3 = async (options: S3FileOptions, s3: S3Client): Promise<void> => {
   const params: PutObjectCommandInput = {
     Bucket: options.bucketName,
     Key: options.key,
@@ -373,14 +330,9 @@ export const writeFileToS3 = async (
 
   try {
     await s3.send(new PutObjectCommand(params));
-    console.log(
-      `Successfully uploaded ${options.key} to ${options.bucketName}`
-    );
+    console.log(`Successfully uploaded ${options.key} to ${options.bucketName}`);
   } catch (error) {
-    console.error(
-      `Error uploading ${options.key} to ${options.bucketName}:`,
-      error
-    );
+    console.error(`Error uploading ${options.key} to ${options.bucketName}:`, error);
     throw error;
   }
 };
@@ -390,10 +342,7 @@ interface S3DeleteFileOptions {
   key: string;
 }
 
-export const deleteFileFromS3 = async (
-  options: S3DeleteFileOptions,
-  s3: S3Client
-): Promise<void> => {
+export const deleteFileFromS3 = async (options: S3DeleteFileOptions, s3: S3Client): Promise<void> => {
   const params: DeleteObjectCommandInput = {
     Bucket: options.bucketName,
     Key: options.key,
@@ -401,14 +350,9 @@ export const deleteFileFromS3 = async (
 
   try {
     await s3.send(new DeleteObjectCommand(params));
-    console.log(
-      `Successfully deleted ${options.key} from ${options.bucketName}`
-    );
+    console.log(`Successfully deleted ${options.key} from ${options.bucketName}`);
   } catch (error) {
-    console.error(
-      `Error deleting ${options.key} from ${options.bucketName}:`,
-      error
-    );
+    console.error(`Error deleting ${options.key} from ${options.bucketName}:`, error);
     throw error;
   }
 };

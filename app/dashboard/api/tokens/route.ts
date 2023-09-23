@@ -14,6 +14,7 @@ export interface FormattedToken {
   id: string;
   image: string;
   thumbnail: string;
+  selected?: boolean;
 }
 
 export async function GET(request: NextRequest) {
@@ -77,28 +78,6 @@ export async function GET(request: NextRequest) {
     }
 
     init(process.env.FEATURE_ENABLE_AIRSTACK_API_KEY as string, "dev");
-
-    const listNftsForAddress2 = `query MyQuery {
-      Ethereum: TokenBalances(
-        input: {filter: {owner: {_eq: "${account}"}, tokenType: {_eq: ERC721}}, blockchain: ${network}, limit: 50}
-      ) {
-        TokenBalance {
-          token {
-            name
-            tokenNfts {
-              contentValue {
-                image {
-                  medium
-                  small
-                }
-              }
-            }
-          }
-          tokenAddress
-          tokenId
-        }
-      }
-    }`;
 
     const listNftsForAddress = `query MyQuery {
       Ethereum: TokenBalances(

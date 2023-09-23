@@ -4,7 +4,7 @@ import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { authUserToken, createApiGatewayResponse, getItem, getObjectMetadata, getPreSignedUrl, listS3Objects, readFileFromS3 } from "./utils";
 import { S3Client } from "@aws-sdk/client-s3";
 import ethers from "ethers";
-import { LINKT_ABI } from "../abi/ABI";
+// import { LINKT_ABI } from "../abi/ABI";
 
 const BUCKET_NAME = process.env.BUCKET_NAME as string;
 
@@ -93,11 +93,11 @@ export const getPresignUrls: APIGatewayProxyHandler = async (event) => {
   // // Assert the correctness of the mapped addresses and token IDs
   // expect(mappedAddresses).to.include.members([erc721Mock.address, erc721Mock2.address]);
 
-  const lowerCaseAddress = (await authUserToken(token)) || "unauthorized";
-  const provider = new ethers.JsonRpcProvider(process.env.RPC_ENDPOINT);
-  const contract = new ethers.Contract(process.env.DEPLOYED_CONTRACT_ADDRESS as string, LINKT_ABI, provider);
-  const data = await contract.listPublications(requestedContract, lowerCaseAddress);
-  console.log(data);
+  // const lowerCaseAddress = (await authUserToken(token)) || "unauthorized";
+  // const provider = new ethers.JsonRpcProvider(process.env.RPC_ENDPOINT);
+  // const contract = new ethers.Contract(process.env.DEPLOYED_CONTRACT_ADDRESS as string, LINKT_ABI, provider);
+  // const data = await contract.listPublications(requestedContract, lowerCaseAddress);
+  // console.log(data);
 
   try {
     const s3Objects = await listS3Objects(BUCKET_NAME, action.path, s3);

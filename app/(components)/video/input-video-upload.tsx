@@ -124,10 +124,13 @@ export function UploadVideo() {
     address: process.env.NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS as `0x${string}`,
   }) as any;
 
-  const { isSuccess, write } = useContractWrite({
+  const { write } = useContractWrite({
     address: process.env.NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS as `0x${string}`,
     abi: LINKT_ABI,
     functionName: "publishVideo",
+    onSettled(data, error, variables, context) {
+      console.log(data, error);
+    },
     args: [
       nextPublicationId, // VideoId - always just increment what is existing
       fileHash,
@@ -162,6 +165,8 @@ export function UploadVideo() {
         Authorization: token as string,
       },
     });
+    console.log(videoPreSignedUrl);
+
     const videoPreSignedUrlData = JSON.parse(await videoPreSignedUrl.json());
 
     if (placeholderData.file) {
@@ -189,13 +194,10 @@ export function UploadVideo() {
           },
         });
       }
-
+      console.log(response);
       if (response?.ok) {
         try {
           write?.(); // Publish Video content to contract
-          if (isSuccess) {
-            console.log(`Success!`);
-          }
         } catch (error) {
           console.log(`Error!`, error);
           return; // Return, dont continue to upload anything

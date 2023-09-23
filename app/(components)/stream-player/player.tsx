@@ -49,9 +49,7 @@ const IvsPlayer = () => {
       if (isPlayerSupported) {
         const player = IVSPlayer.create(videoPlayer.current);
         player.attachHTMLVideoElement(videoPlayer.current);
-        player.load(
-          "https://b9e19e28061f.us-east-1.playback.live-video.net/api/video/v1/us-east-1.127823924650.channel.N6ahTinoLXBp.m3u8"
-        );
+        player.load("https://b9e19e28061f.us-east-1.playback.live-video.net/api/video/v1/us-east-1.127823924650.channel.N6ahTinoLXBp.m3u8");
         player.setMuted(false);
         player.play();
         videoPlayer.current = player;
@@ -63,6 +61,7 @@ const IvsPlayer = () => {
     <div className="">
       <video
         className=""
+        poster="https://pdtxar.com/wp-content/uploads/2019/11/video-placeholder-1280x720-40-768x433.jpg"
         playsInline
         ref={videoPlayer}
         style={{ width: "100%", height: "100%" }}

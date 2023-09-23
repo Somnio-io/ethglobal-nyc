@@ -25,6 +25,7 @@ export interface Content {
 export interface Video {
   id: string;
   name: string;
+  live?: string;
   description: string;
   placeholderUrl: string;
   publisher: string;
@@ -78,6 +79,7 @@ export const transformData = (originalData: any[]) => {
     let name = "";
     let description = "";
     let placeholderUrl = "";
+    let live = "";
     let publisher = "";
     let url = "";
     let audience = "ALL"; // Default value
@@ -95,6 +97,7 @@ export const transformData = (originalData: any[]) => {
       }
 
       // Check the extension for url and placeholderUrl
+      live = item.live || "";
       if (item.data.extension === "mp4") {
         url = item.data.url;
       } else if (!item.name && !item.description) {
@@ -107,6 +110,7 @@ export const transformData = (originalData: any[]) => {
       id,
       name,
       description,
+      live,
       placeholderUrl,
       publisher,
       url,

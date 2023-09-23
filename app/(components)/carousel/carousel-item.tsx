@@ -5,23 +5,19 @@ import { HeartFilledIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import { cn } from "@/(lib)/utils";
 
-interface carouselItemProps extends React.HTMLAttributes<HTMLDivElement> {
+interface CarouselItemProps extends React.HTMLAttributes<HTMLDivElement> {
   placeholder?: string;
   title: string;
   width?: number;
   height?: number;
   aspectRatio?: "portrait" | "square";
 }
-function carouselItem({ title, placeholder, width, height, aspectRatio }: carouselItemProps) {
-  if (!placeholder) {
-    return <>Loading...</>;
-  }
-
+function CarouselItem({ title, placeholder, width, height, aspectRatio }: CarouselItemProps) {
   return (
     <article className={`relative w-[${width}px] `}>
       <div className="overflow-hidden">
         <Image
-          src={placeholder}
+          src={placeholder || "https://pdtxar.com/wp-content/uploads/2019/11/video-placeholder-1280x720-40-768x433.jpg"}
           alt={title}
           priority={true}
           unoptimized={true}
@@ -40,4 +36,4 @@ function carouselItem({ title, placeholder, width, height, aspectRatio }: carous
   );
 }
 
-export default carouselItem;
+export default CarouselItem;
