@@ -79,7 +79,7 @@ export function UploadVideo() {
   const [selectedAudience, setSelectedAudience] = useState(EAudience.ALL);
   const [connectedContract, setConnectedContract] = useState("");
   const [loading, setLoading] = useState(true);
-  const [nextPublicationId, setNextPublicationId] = useState(0);
+  const [nextPublicationId, setNextPublicationId] = useState<bigint>(0n);
 
   const [videoData, handleVideoFileChange] = useFileWithSource();
   const [placeholderData, handlePlaceholderFileChange] = useFileWithSource();
@@ -96,6 +96,7 @@ export function UploadVideo() {
       const jsonData = JSON.parse(await data.json());
       console.log(jsonData);
       if (jsonData.user) {
+        console.log(jsonData.user?.contractAddress);
         setConnectedContract(jsonData.user?.contractAddress);
       }
       setLoading(false);
@@ -111,14 +112,16 @@ export function UploadVideo() {
     enabled: Boolean(connectedContract),
     functionName: "getPublicationCount",
     onSuccess(data: any) {
-      setNextPublicationId(parseInt(data) + 1);
+      const nextPub = parseInt(data) + 1;
+      const bgNextPub = BigInt(nextPub);
+      setNextPublicationId(bgNextPub);
     },
     args: [connectedContract],
     address: process.env.NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS as `0x${string}`,
   }) as any;
 
   // console.log(`Publication Count! `, publicationCount);
-  const { config } = usePrepareContractWrite({
+  const { config, refetch } = usePrepareContractWrite({
     abi: LINKT_ABI,
     functionName: "publishVideo",
     onSuccess(data) {
@@ -131,28 +134,34 @@ export function UploadVideo() {
     //   audienceType: 0,
     //   tokenId: 0,
     // }
-    enabled: Boolean(uploadName && uploadDescription && selectedAudience && fileHash && nextPublicationId > 0),
+    enabled: Boolean(uploadName && uploadDescription && selectedAudience && fileHash),
     args: [
       nextPublicationId, // VideoId - always just increment what is existing
       fileHash,
       connectedContract,
-      {
-        audienceType: audiences.indexOf(selectedAudience),
+      Object.values({
+        audienceType: audiences.indexOf(selectedAudience) + 1,
         tokenId: 0, // Only for token publishing
-      },
+      }),
     ],
     address: process.env.NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS as `0x${string}`,
   });
 
-  const { data, isLoading, isSuccess, write } = useContractWrite({
+  const { data, isLoading, isSuccess, error, isError, write, reset, variables } = useContractWrite({
     ...config,
-    onSuccess(data, variables, context) {
+    onSuccess(data1, variables, context) {
+      console.log(data1);
       console.log(data);
     },
-    onError(error, variables, context) {
-      console.log(error);
+    onError(error1, variables, context) {
+      console.log(data);
+      console.log(error1);
+    },
+    onSettled(data, error, variables, context) {
+      console.log(data, error, variables, context);
     },
   });
+  console.log(`Output`, data, isLoading, isSuccess, error, isError, write, reset, variables);
 
   const handleUpload = async () => {
     const token = localStorage.getItem("token");
@@ -163,8 +172,7 @@ export function UploadVideo() {
     }
 
     const md5Hash = await calculateMD5(videoData.file);
-    console.log(md5Hash);
-    setFileHash(`File hash is ${md5Hash}`);
+    setFileHash(md5Hash);
     const videoPreSignedUrl = await fetch(UPLOAD_URL, {
       method: "GET",
       cache: "no-cache",
@@ -182,7 +190,8 @@ export function UploadVideo() {
 
     try {
       console.log(`Calling write!`);
-      console.log(nextPublicationId, fileHash, connectedContract, selectedAudience);
+      console.log(nextPublicationId, md5Hash, connectedContract, selectedAudience);
+      refetch?.();
       write?.(); // Publish Video content to contract
     } catch (error) {
       console.log(`Error!`, error);

@@ -37,12 +37,7 @@ interface IPrepareTransaction {
   abi: any;
 }
 
-export const uploadToS3 = (
-  uploadUrl: string,
-  fileData: File,
-  contentType: string,
-  setProgress: Dispatch<SetStateAction<number>>
-) => {
+export const uploadToS3 = (uploadUrl: string, fileData: File, contentType: string, setProgress: Dispatch<SetStateAction<number>>) => {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
 
@@ -121,33 +116,6 @@ export const transformData = (originalData: any[]) => {
   //  as TransformedResponse[]
   return transformedArray as unknown as Video[];
 };
-
-// export const prepareTransaction = async ({
-//   address,
-//   abi,
-// }: IPrepareTransaction) => {
-//   const provider = new BrowserProvider(window.ethereum);
-//   const signer = await provider.getSigner();
-
-//   const contract = new Contract(
-//     process.env.FEATURE_DEPLOYED_CONTRACT_ADDRESS as string,
-//     abi,
-//     signer
-//   );
-
-//   // Prepare transaction
-//   const txRequest = await contract.populateTransaction.doSomething(); // Replace with your method
-//   const tx = await signer.signTransaction(txRequest);
-
-//   // Send the signed transaction to your server
-//   fetch("/api/sponsorTransaction", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify({ signedTransaction: tx }),
-//   });
-// };
 
 export const LINKT_ABI = [
   {
@@ -327,6 +295,11 @@ export const LINKT_ABI = [
       {
         internalType: "address",
         name: "_erc721Address",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_requester",
         type: "address",
       },
     ],
@@ -617,8 +590,7 @@ export const LINKT_ABI = [
   },
 ];
 
-export const BASE_URL =
-  "https://q2p3u7dpgi.execute-api.us-east-1.amazonaws.com/prod";
+export const BASE_URL = "https://q2p3u7dpgi.execute-api.us-east-1.amazonaws.com/prod";
 
 export const LIVE_URL = `${BASE_URL}/live`;
 

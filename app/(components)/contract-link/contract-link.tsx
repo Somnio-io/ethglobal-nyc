@@ -5,15 +5,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/(components)/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/(components)/ui/form";
 import { Input } from "@/(components)/ui/input";
 import { Button } from "@/(components)/ui/button";
 import { useContractRead } from "wagmi";
@@ -30,9 +22,7 @@ interface IContractLink {
 
 export function ContractLink({ address }: IContractLink) {
   const router = useRouter();
-  const [contractAddress, setContractAddress] = useState<`0x${string}` | null>(
-    null
-  );
+  const [contractAddress, setContractAddress] = useState<`0x${string}` | null>(null);
   const [verified, setVerified] = useState<boolean>(false);
 
   useContractRead({
@@ -50,7 +40,6 @@ export function ContractLink({ address }: IContractLink) {
             connectedContract: contractAddress,
           }),
         });
-        console.log(req);
         if (req.ok) {
           setVerified(true);
           return router.replace(`/dashboard/${address}`);
@@ -85,9 +74,7 @@ export function ContractLink({ address }: IContractLink) {
                 <FormControl>
                   <Input placeholder="0x234" {...field} />
                 </FormControl>
-                <FormDescription>
-                  Enter your contract address to link it to your profile.
-                </FormDescription>
+                <FormDescription>Enter your contract address to link it to your profile.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
