@@ -45,7 +45,7 @@ export default function Page({ params }: { params: { address: string } }) {
 
   return (
     <>
-      {false ? (
+      {true ? (
         <>
           <div className="grid grid-cols-4 gap-2">
             <div className="col-start-1 col-span-4 space-y-4">
