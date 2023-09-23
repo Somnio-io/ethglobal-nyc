@@ -47,7 +47,7 @@ export default function Page({ params }: { params: { id: string } }) {
   if (!loading && !content.length) {
     // We need to prompt the user here to Login.
     // If they Login we present the select token
-    return <p>You don't have access to this content...</p>;
+    return <p>{"You don't have access to this content..."}</p>;
   }
 
   const video = content.find((video) => video);

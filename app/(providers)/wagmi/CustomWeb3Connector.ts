@@ -1,11 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import {
-  Address,
-  Chain,
-  Connector,
-  ConnectorData,
-  WalletClient,
-} from "@wagmi/core";
+import { Address, Chain, Connector, ConnectorData, WalletClient } from "@wagmi/core";
 import {
   ADAPTER_STATUS,
   CHAIN_NAMESPACES,
@@ -17,13 +11,7 @@ import {
 } from "@web3auth/base";
 import type { IWeb3AuthModal, ModalConfig } from "@web3auth/modal";
 import type { OpenloginLoginParams } from "@web3auth/openlogin-adapter";
-import {
-  createWalletClient,
-  custom,
-  getAddress,
-  SwitchChainError,
-  UserRejectedRequestError,
-} from "viem";
+import { createWalletClient, custom, getAddress, SwitchChainError, UserRejectedRequestError } from "viem";
 
 export interface Options {
   web3AuthInstance: IWeb3Auth | IWeb3AuthModal;
@@ -33,26 +21,17 @@ export interface Options {
 
 const IS_SERVER = typeof window === "undefined";
 
-function isIWeb3AuthModal(
-  obj: IWeb3Auth | IWeb3AuthModal
-): obj is IWeb3AuthModal {
+function isIWeb3AuthModal(obj: IWeb3Auth | IWeb3AuthModal): obj is IWeb3AuthModal {
   return typeof (obj as IWeb3AuthModal).initModal !== "undefined";
 }
 
 function normalizeChainId(chainId: string | number | bigint) {
-  if (typeof chainId === "string")
-    return Number.parseInt(
-      chainId,
-      chainId.trim().substring(0, 2) === "0x" ? 16 : 10
-    );
+  if (typeof chainId === "string") return Number.parseInt(chainId, chainId.trim().substring(0, 2) === "0x" ? 16 : 10);
   if (typeof chainId === "bigint") return Number(chainId);
   return chainId;
 }
 
-export class CustomWeb3Connector extends Connector<
-  SafeEventEmitterProvider,
-  Options
-> {
+export class CustomWeb3Connector extends Connector<SafeEventEmitterProvider, Options> {
   ready = !IS_SERVER;
 
   readonly id = "web3auth";
@@ -74,9 +53,7 @@ export class CustomWeb3Connector extends Connector<
     this.modalConfig = options.modalConfig || null;
   }
 
-  async connect({ chainId }: { chainId?: number } = {}): Promise<
-    Required<ConnectorData>
-  > {
+  async connect({ chainId }: { chainId?: number } = {}): Promise<Required<ConnectorData>> {
     try {
       this.emit("message", {
         type: "connecting",
@@ -91,24 +68,14 @@ export class CustomWeb3Connector extends Connector<
         if (isIWeb3AuthModal(this.web3AuthInstance)) {
           await this.web3AuthInstance.connect();
         } else if (this.loginParams) {
-          await this.web3AuthInstance.connectTo(
-            WALLET_ADAPTERS.OPENLOGIN,
-            this.loginParams
-          );
+          await this.web3AuthInstance.connectTo(WALLET_ADAPTERS.OPENLOGIN, this.loginParams);
         } else {
-          log.error(
-            "please provide valid loginParams when using @web3auth/no-modal"
-          );
-          throw new UserRejectedRequestError(
-            "please provide valid loginParams when using @web3auth/no-modal" as unknown as Error
-          );
+          log.error("please provide valid loginParams when using @web3auth/no-modal");
+          throw new UserRejectedRequestError("please provide valid loginParams when using @web3auth/no-modal" as unknown as Error);
         }
       }
 
-      const [account, connectedChainId] = await Promise.all([
-        this.getAccount(),
-        this.getChainId(),
-      ]);
+      const [account, connectedChainId] = await Promise.all([this.getAccount(), this.getChainId()]);
       let unsupported = this.isChainUnsupported(connectedChainId);
       let id = connectedChainId;
       if (chainId && connectedChainId !== chainId) {
@@ -127,26 +94,19 @@ export class CustomWeb3Connector extends Connector<
     } catch (error) {
       log.error("error while connecting", error);
       this.onDisconnect();
-      throw new UserRejectedRequestError(
-        "Something went wrong" as unknown as Error
-      );
+      throw new UserRejectedRequestError("Something went wrong" as unknown as Error);
     }
   }
 
-  async getWalletClient({
-    chainId,
-  }: { chainId?: number } = {}): Promise<WalletClient> {
-    const [provider, account] = await Promise.all([
-      this.getProvider(),
-      this.getAccount(),
-    ]);
+  async getWalletClient({ chainId }: { chainId?: number } = {}): Promise<WalletClient> {
+    const [provider, account] = await Promise.all([this.getProvider(), this.getAccount()]);
     const chain = this.chains.find((x) => x.id === chainId);
     if (!provider) throw new Error("provider is required.");
     return createWalletClient({
       account,
       chain,
       transport: custom(provider),
-    });
+    }) as any;
   }
 
   async getAccount(): Promise<Address> {
@@ -173,12 +133,8 @@ export class CustomWeb3Connector extends Connector<
       } else if (this.loginParams) {
         await this.web3AuthInstance.init();
       } else {
-        log.error(
-          "please provide valid loginParams when using @web3auth/no-modal"
-        );
-        throw new UserRejectedRequestError(
-          "please provide valid loginParams when using @web3auth/no-modal" as unknown as Error
-        );
+        log.error("please provide valid loginParams when using @web3auth/no-modal");
+        throw new UserRejectedRequestError("please provide valid loginParams when using @web3auth/no-modal" as unknown as Error);
       }
     }
 
@@ -207,14 +163,12 @@ export class CustomWeb3Connector extends Connector<
   async switchChain(chainId: number) {
     try {
       const chain = this.chains.find((x) => x.id === chainId);
-      if (!chain)
-        throw new SwitchChainError(new Error("chain not found on connector."));
+      if (!chain) throw new SwitchChainError(new Error("chain not found on connector."));
 
       await this.web3AuthInstance.addChain({
         chainNamespace: CHAIN_NAMESPACES.EIP155,
         chainId: `0x${chain.id.toString(16)}`,
-        rpcTarget:
-          "wss://arb-mainnet.g.alchemy.com/v2/4zXUK6CLz16w4iiALkUlj9aAFKmqHnWf",
+        rpcTarget: "wss://arb-mainnet.g.alchemy.com/v2/4zXUK6CLz16w4iiALkUlj9aAFKmqHnWf",
         displayName: chain.name,
         blockExplorer: chain.blockExplorers?.default.url[0] || "",
         ticker: chain.nativeCurrency?.symbol || "ETH",
