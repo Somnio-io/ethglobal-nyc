@@ -6,8 +6,11 @@ import { Button } from "@/(components)/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/(components)/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/(components)/ui/select";
 import { Label } from "@/(components)/ui/label";
+import { Input } from "@/(components)/ui/input";
+
 import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from "wagmi";
 import { ReloadIcon, CheckIcon } from "@radix-ui/react-icons";
+import { useState } from "react";
 
 export function TipModal() {
   const [selectedToken, setSelectedToken] = useState(null);
@@ -51,7 +54,7 @@ export function TipModal() {
       <DialogTrigger asChild>
         <Button variant="outline">Tip</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] text-left">
         <DialogHeader>
           <DialogTitle>Leave a tip </DialogTitle>
           <DialogDescription>Select the token you would like to leave a tip with.</DialogDescription>
@@ -61,7 +64,7 @@ export function TipModal() {
             <Label htmlFor="name" className="text-right">
               Currency
             </Label>
-            <Select onSelect={(value) => setSelectedToken(value)}>
+            <Select onSelect={(value) => setSelectedToken(value)} required>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Tip" />
               </SelectTrigger>
@@ -71,6 +74,12 @@ export function TipModal() {
                 <SelectItem value="APE">APE</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="tip-value" className="text-right">
+              How much
+            </Label>
+            <Input id="tip-value" value="0" className="col-span-2" />
           </div>
         </div>
         <DialogFooter>
