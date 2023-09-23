@@ -52,6 +52,10 @@
 body {
 }
 
+.w3a-button--primary {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+}
 /* Hide scroll bar */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
