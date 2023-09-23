@@ -103,18 +103,6 @@ export async function GET(request: NextRequest) {
       //console.log("Key Value => ", Object.keys(value as {}));
 
       result[key] = Object.keys(value as {});
-      // if (!result[key]) {
-      //   result[key] = [];
-      // }
-      //   console.log("Token => ", token);
-      //   const _token: FormattedToken = {
-      //     name: token.token.name,
-      //     address: token.tokenAddress,
-      //     id: token.tokenId,
-      //     image: token.tokenNfts.contentValue.image ? token.tokenNfts.contentValue.image.small : "",
-      //     thumbnail: token.tokenNfts.contentValue.image ? token.tokenNfts.contentValue.image.small : "",
-      //   };
-      // result[key].push(value);
     }
 
     console.log("Result =>", result);
