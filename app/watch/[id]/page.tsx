@@ -8,8 +8,10 @@ import { Button } from "@/(components)/ui/button";
 import { HeartFilledIcon } from "@radix-ui/react-icons";
 import { TipModal } from "@/(components)/tip-modal/tip-modal";
 import IvsPlayer from "@/(components)/stream-player/player";
+import { useAccount } from "wagmi";
 
 export default function Page({ params }: { params: { id: string } }) {
+  const { address } = useAccount();
   const searchParams = useSearchParams();
   const [content, setContent] = useState<Video[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -27,7 +29,7 @@ export default function Page({ params }: { params: { id: string } }) {
         },
       });
       const jsonUrls = JSON.parse(await data.json());
-      console.log(jsonUrls);
+
       if (jsonUrls.presignedUrls.length) {
         const groupedContent = jsonUrls.presignedUrls.reduce((acc: { [key: string]: ContentKey[] }, curr: ContentKey) => {
           if (!acc[curr.id]) {
@@ -110,7 +112,7 @@ export default function Page({ params }: { params: { id: string } }) {
           <Button variant="outline" size="icon">
             <HeartFilledIcon className="h-4 w-4" />
           </Button>
-          {!process.env.FEATURE_ENABLE_TIPPING_TOKEN ? <TipModal /> : null}
+          {!process.env.FEATURE_ENABLE_TIPPING_TOKEN ? <TipModal target={video?.publisher} usersWalletAddress={address} /> : null}
         </div>
       </div>
     )

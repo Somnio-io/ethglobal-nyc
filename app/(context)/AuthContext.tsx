@@ -16,6 +16,7 @@ interface IAuthContext {
   signOut: () => void;
   isAuthed: boolean;
   isLoading: boolean;
+  connectedContract: string;
   account?: string;
   showContractInputForm: boolean;
   setShowContractInputForm: Dispatch<SetStateAction<boolean>>;
@@ -34,6 +35,8 @@ export function AuthWrapper({ children }: any) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [account, setAccount] = useState<string>("");
   const [isAuthed, setIsAuthed] = useState<boolean>(false);
+  const [connectedContract, setConnectedContract] = useState<string>("");
+
   const [showContractInputForm, setShowContractInputForm] = useState<boolean>(false);
 
   const router = useRouter();
@@ -43,6 +46,7 @@ export function AuthWrapper({ children }: any) {
       console.log(`Calling check user in auth context`);
       const user = await checkUser();
       if (user) {
+        setConnectedContract(user?.connectedContract || "");
         setAccount(user.address);
         setIsLoading(false);
         return;
@@ -73,6 +77,7 @@ export function AuthWrapper({ children }: any) {
       const user = response.user as User;
       if (user.address) {
         localStorage.setItem("token", token);
+        setConnectedContract(user?.connectedContract || "");
         setIsAuthed(true);
         return user;
       }
@@ -112,6 +117,7 @@ export function AuthWrapper({ children }: any) {
       const user = response.user as User;
       if (user.address) {
         localStorage.setItem("token", token);
+        setConnectedContract(user?.connectedContract || "");
         setAccount(user.address);
         setIsAuthed(true);
         return user;
@@ -135,6 +141,7 @@ export function AuthWrapper({ children }: any) {
         signOut,
         account,
         isAuthed,
+        connectedContract,
         showContractInputForm,
         setShowContractInputForm,
       }}

@@ -1,14 +1,33 @@
 "use client";
 
 import { Separator } from "@/(components)/ui/separator";
-import { CONTENT_URL, ContentKey, Video, transformData } from "@/(lib)/utils";
+import { CONTENT_URL, ContentKey, LINKT_ABI, Video, transformData } from "@/(lib)/utils";
 import CarouselBase from "@/(components)/carousel/carousel-base";
 import { useEffect, useState } from "react";
 import { TokenSelectorList } from "@/(components)/token-selector-list/token-selector-list";
+import { useContractRead } from "wagmi";
+import { useAuthContext } from "@/(context)/AuthContext";
 
 export default function Page({ params }: { params: { address: string } }) {
   const [content, setContent] = useState<Video[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [tipAmount, setTipAmount] = useState<number>(0);
+  const { connectedContract } = useAuthContext();
+
+  console.log(connectedContract);
+  useContractRead({
+    address: process.env.NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS as `0x${string}`,
+    enabled: Boolean(connectedContract),
+    onSuccess: async (data: string) => {
+      console.log("Datalordzz", data);
+      if (parseInt(data.toString()) > 0) {
+        setTipAmount(parseInt(data.toString()));
+      }
+    },
+    abi: LINKT_ABI,
+    args: [connectedContract],
+    functionName: "tips",
+  });
 
   useEffect(() => {
     const _fetch = async () => {
@@ -60,8 +79,8 @@ export default function Page({ params }: { params: { address: string } }) {
               <p className="text-2xl font-bold tracking-tight text-primary"> +20 </p>
             </article>
             <article className="col-start-1 col-span-4 p-4  border-2  h-32 space-y-6">
-              <h3 className="text-base font-medium tracking-tight "> Tips accrued in coin of choice</h3>
-              <p className="text-2xl font-bold tracking-tight text-primary">10 coins</p>
+              <h3 className="text-base font-medium tracking-tight "> Tips</h3>
+              <p className="text-2xl font-bold tracking-tight text-primary">{tipAmount}</p>
             </article>
 
             {/* <CarouselBase name="Trending" content={[]} /> */}

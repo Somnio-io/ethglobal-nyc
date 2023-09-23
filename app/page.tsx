@@ -9,7 +9,7 @@ export default async function Home() {
     <>
       <h1 className="text-3xl font-bold leading-tight tracking-tighter text-left my-12">Discover</h1>
       <CarouselBase name="Trending" content={content} />
-      <CarouselBase name="New Content" content={content} />
+      <CarouselBase name="New Content" content={content.reverse()} />
     </>
   );
 }

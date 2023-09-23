@@ -8,45 +8,70 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label } from "@/(components)/ui/label";
 import { Input } from "@/(components)/ui/input";
 
-import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from "wagmi";
+import { usePrepareContractWrite, useContractWrite, useWaitForTransaction, useContractRead, erc20ABI } from "wagmi";
 import { ReloadIcon, CheckIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { LINKT_ABI } from "@/(lib)/utils";
+import { MaxInt256 } from "ethers";
 
-export function TipModal() {
+export function TipModal({ target, usersWalletAddress }: any) {
+  console.log(usersWalletAddress);
   const [selectedToken, setSelectedToken] = useState(null);
-  const [inputTip, setInputTip] = useState("0");
+  const [inputTip, setInputTip] = useState<bigint>(0n);
+  const [isApproved, setIsApproved] = useState<boolean>(false);
+  const [buttonText, setButtonText] = useState<string>("Approve");
 
-  const { config } = usePrepareContractWrite({
-    address: "0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2",
-    abi: [
-      {
-        name: "tip",
-        type: "function",
-        stateMutability: "nonpayable",
-        inputs: [],
-        outputs: [],
-      },
-    ],
-    functionName: "tip",
+  const { refetch } = useContractRead({
+    address: process.env.NEXT_PUBLIC_FEATURE_ENABLE_TIPPING_TOKEN_ADDRESS as `0x${string}`,
+    enabled: true,
+    onSuccess: async (data: string) => {
+      console.log(`Data!!!`, data);
+      console.log(data.toString());
+      if (parseInt(data.toString()) > 0) {
+        setIsApproved(true);
+      }
+    },
+    abi: erc20ABI,
+    args: [usersWalletAddress!, process.env.NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS as `0x${string}`],
+    functionName: "allowance",
   });
 
-  const { data, write } = useContractWrite(config);
-
-  const { isLoading, isSuccess } = useWaitForTransaction({
-    hash: data?.hash,
+  const {
+    write: approveSpend,
+    isLoading: loadingApprove,
+    isSuccess: successApproved,
+  } = useContractWrite({
+    address: process.env.NEXT_PUBLIC_FEATURE_ENABLE_TIPPING_TOKEN_ADDRESS as `0x${string}`,
+    abi: erc20ABI,
+    onSuccess(data, variables, context) {
+      console.log(data);
+      refetch();
+    },
+    onError(error, variables, context) {
+      console.log(error);
+    },
+    functionName: "approve",
+    args: [process.env.NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS as `0x${string}`, MaxInt256],
   });
-  let buttonText = "Tip";
-  let buttonIcon = null;
-  let buttonClass = "";
 
-  if (isLoading) {
-    buttonText = "Please wait";
-    buttonIcon = <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />;
-  } else if (isSuccess) {
-    buttonText = "Successful";
-    buttonIcon = <CheckIcon className="mr-2 h-4 w-4 animate-bounce" />;
-    buttonClass = "bg-green-500";
-  }
+  const { write, isLoading, isSuccess } = useContractWrite({
+    address: process.env.NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS as `0x${string}`,
+    abi: LINKT_ABI,
+    functionName: "tipContentCreator",
+    onSettled(data, error, variables, context) {
+      console.log(data, error);
+    },
+    args: [inputTip, target],
+  });
+
+  useEffect(() => {
+    if (isLoading) {
+      setButtonText("Please wait");
+    } else if (isSuccess) {
+      setButtonText("Successful");
+    }
+    setButtonText(isApproved ? "Tip" : "Approve");
+  }, [isApproved, isLoading, isSuccess]);
 
   const isDisabled = !selectedToken || !write || isLoading;
 
@@ -65,7 +90,7 @@ export function TipModal() {
             <Label htmlFor="name" className="text-right">
               Currency
             </Label>
-            <Select onSelect={(value) => setSelectedToken(value)} required>
+            <Select onValueChange={(value: any) => setSelectedToken(value)} required>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Tip" />
               </SelectTrigger>
@@ -78,14 +103,13 @@ export function TipModal() {
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="tip-value" className="text-right">
-              How much
+              Amount
             </Label>
-            <Input id="tip-value" value={inputTip} className="col-span-2" onChange={(e) => setInputTip(e.target.value)} />
+            <Input id="tip-value" value={inputTip.toString()} className="col-span-2" onChange={(e) => setInputTip(BigInt(e.target.value))} />
           </div>
         </div>
         <DialogFooter>
-          <Button className={buttonClass} type="submit" onClick={() => write?.()} disabled={isDisabled}>
-            {buttonIcon}
+          <Button className={`mr-2 h-4 w-4`} type="submit" onClick={() => (isApproved ? write?.() : approveSpend?.())} disabled={isDisabled}>
             {buttonText}
           </Button>
         </DialogFooter>

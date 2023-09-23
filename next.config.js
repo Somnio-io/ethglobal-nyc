@@ -45,7 +45,7 @@ const nextConfig = {
     FEATURE_ENABLE_AIRSTACK: true, // https://ethglobal.com/events/newyork2023/prizes#airstack
 
     FEATURE_ENABLE_TIPPING_TOKEN: false, // https://ethglobal.com/events/newyork2023/prizes/apecoin-dao-mu0vz
-    FEATURE_ENABLE_TIPPING_TOKEN_ADDRESS: "", // What token will be used for tipping? -> https://ethglobal.com/events/newyork2023/prizes/apecoin-dao-mu0vz - https://ethglobal.com/events/newyork2023/prizes/aave-grants-dao-ac2mc
+    NEXT_PUBLIC_FEATURE_ENABLE_TIPPING_TOKEN_ADDRESS: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174", // What token will be used for tipping? -> https://ethglobal.com/events/newyork2023/prizes/apecoin-dao-mu0vz - https://ethglobal.com/events/newyork2023/prizes/aave-grants-dao-ac2mc
     NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS: deployedContract,
     NEXT_PUBLIC_FEATURE_ENABLE_STREAM_KEY: "sk_us-east-1_AeZ1Y334gIcL_pjftb7I02X0QuHwNgHfHy1xkRtaL2E",
     FEATURE_ENABLE_STREAMING_ENDPOINT: "rtmps://b9e19e28061f.global-contribute.live-video.net:443/app/",
