@@ -11,7 +11,7 @@ export default function Page() {
 
   useEffect(() => {
     const _fetch = async () => {
-      const data = await fetch(`/dashboard/api/traits`, {
+      const data = await fetch(`/dashboard/api/traits?account=${"0x123"}`, {
         method: "GET",
         headers: {},
       });

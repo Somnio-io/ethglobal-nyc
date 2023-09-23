@@ -9,12 +9,12 @@ interface FormattedTraits {
 }
 
 export async function GET(request: NextRequest) {
-  // const account = request.nextUrl.searchParams.get("account");
+  const account = request.nextUrl.searchParams.get("account");
   let response = [];
 
-  // if (!account) {
-  //   return NextResponse.json({ message: "Missing account param" }, { status: 400 });
-  // }
+  if (!account) {
+    return NextResponse.json({ message: "Missing account param" }, { status: 400 });
+  }
 
   // if (process.env.FEATURE_ENABLE_QUICKNODE) {
   //   let network = process.env.FEATURE_TARGET_NETWORK as Network | string;
