@@ -120,33 +120,7 @@ export function UploadVideo() {
     address: process.env.NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS as `0x${string}`,
   }) as any;
 
-  // console.log(`Publication Count! `, publicationCount);
-  console.log(Boolean(uploadName && uploadDescription && selectedAudience && fileHash));
-  // const { config, refetch } = usePrepareContractWrite({
-  //   abi: LINKT_ABI,
-  //   functionName: "publishVideo",
-  //   onSuccess(data) {
-  //     console.log(data);
-  //   },
-  //   onError(err) {
-  //     console.log(err);
-  //   },
-  //   address: process.env.NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS as `0x${string}`,
-
-  //   enabled: Boolean(uploadName && uploadDescription && selectedAudience && fileHash),
-  //   args: [
-  //     nextPublicationId, // VideoId - always just increment what is existing
-  //     fileHash,
-  //     connectedContract,
-  //     {
-  //       audienceType: audiences.indexOf(selectedAudience) + 1,
-  //       tokenId: 0, // Only for token publishing
-  //     },
-  //   ],
-  // });
-
-  const { data, error, write } = useContractWrite({
-    // ...config,
+  const { isSuccess, write } = useContractWrite({
     address: process.env.NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS as `0x${string}`,
     abi: LINKT_ABI,
     functionName: "publishVideo",
@@ -159,22 +133,6 @@ export function UploadVideo() {
         tokenId: 0, // Only for token publishing
       },
     ],
-    // onSuccess(data1, variables, context) {
-    //   console.log(`success`);
-
-    //   console.log(data1);
-    //   console.log(data);
-    // },
-    // onError(error1, variables, context) {
-    //   console.log(`error`);
-
-    //   console.log(data);
-    //   console.log(error1);
-    // },
-    // onSettled(data, error, variables, context) {
-    //   console.log(`Settle`);
-    //   console.log(data, error, variables, context);
-    // },
   });
 
   const handleUpload = async () => {
@@ -203,10 +161,10 @@ export function UploadVideo() {
     const videoPreSignedUrlData = JSON.parse(await videoPreSignedUrl.json());
 
     try {
-      console.log(`Calling write!`);
-      console.log(nextPublicationId, md5Hash, connectedContract, selectedAudience);
-      // refetch?.();
       write?.(); // Publish Video content to contract
+      if (isSuccess) {
+        console.log(`Success!`);
+      }
     } catch (error) {
       console.log(`Error!`, error);
       return; // Return, dont continue to upload anything
