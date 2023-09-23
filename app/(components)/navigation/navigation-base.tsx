@@ -115,7 +115,7 @@ function NavigationBase() {
               aria-label="Toggle additional options"
               className={`p-1 bg-primary pb-4  flex items-center rounded-full z-60 ${isAuthed}? "opacity-100 cursor-pointer":"opacity-50 cursor-not-allowed"`}
             >
-              <PlusCircledIcon className="h-8 w-8 rounded-full bg-primary hover:bg-pink-600" />
+              <PlusCircledIcon className="h-8 w-8 rounded-full bg-primary hover:bg-pink-600 " />
             </button>
           </PopoverTrigger>
 
