@@ -3,6 +3,7 @@
 import { CONTENT_URL, ContentKey, Video, transformData } from "@/(lib)/utils";
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import IvsPlayer from "@/(components)/stream-player/player";
 
 export default function Page({ params }: { params: { id: string } }) {
   const searchParams = useSearchParams();
@@ -59,9 +60,22 @@ export default function Page({ params }: { params: { id: string } }) {
         <div className="justify-between">
           <p>{video?.name}</p>
         </div>
-        <video controls={true} muted={false} autoPlay={true} width={550} height={550} loop={false} playsInline={true} poster={video?.placeholderUrl}>
-          <source src={video?.url} type="video/mp4" />
-        </video>
+        {video?.live ? (
+          <IvsPlayer />
+        ) : (
+          <video
+            controls={true}
+            muted={false}
+            autoPlay={true}
+            width={550}
+            height={550}
+            loop={false}
+            playsInline={true}
+            poster={video?.placeholderUrl}
+          >
+            <source src={video?.url} type="video/mp4" />
+          </video>
+        )}
         <div className="flex justify-between">
           <p>Likes Section</p>
           {process.env.FEATURE_ENABLE_TIPPING_TOKEN ? <p>Tips Section</p> : null}
