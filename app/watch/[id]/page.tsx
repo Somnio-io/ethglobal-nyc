@@ -22,6 +22,7 @@ export default function Page({ params }: { params: { id: string } }) {
         },
       });
       const jsonUrls = JSON.parse(await data.json());
+      console.log(jsonUrls);
       if (jsonUrls.presignedUrls.length) {
         const groupedContent = jsonUrls.presignedUrls.reduce((acc: { [key: string]: ContentKey[] }, curr: ContentKey) => {
           if (!acc[curr.id]) {
@@ -51,6 +52,7 @@ export default function Page({ params }: { params: { id: string } }) {
   }
 
   const video = content.find((video) => video);
+  console.log(`Hello video!`, video, content);
   return (
     content && (
       <div className="grid grid-cols-1">

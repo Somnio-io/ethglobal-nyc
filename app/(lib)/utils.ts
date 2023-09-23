@@ -95,7 +95,6 @@ export const transformData = (originalData: any[]) => {
       if (item.audience) {
         audience = item.audience;
       }
-      console.log(item);
 
       // Check the extension for url and placeholderUrl
       live = item.live || "";
@@ -111,6 +110,7 @@ export const transformData = (originalData: any[]) => {
       id,
       name,
       description,
+      live,
       placeholderUrl,
       publisher,
       url,

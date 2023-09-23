@@ -14,7 +14,6 @@ interface CarouselBaseProps {
 }
 
 function CarouselBase({ name, content }: CarouselBaseProps) {
-  console.log(content);
   return (
     <section className="my-8 relative">
       <h3 className="text-2xl font-semibold tracking-tight max-w-md  text-current">{name}</h3>
