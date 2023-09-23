@@ -142,4 +142,44 @@ contract Linkt is Ownable {
 
         emit Tipped(msg.sender, _erc721Address, _amount);
     }
+
+    function withdrawTips(address _erc721Address) public onlyERC721Owner(_erc721Address) {
+        require(_erc721Address != address(0), "ERC-721 address cannot be zero address");
+
+        uint256 amountToWithdraw = tips[_erc721Address];
+        require(amountToWithdraw > 0, "No tips to withdraw");
+
+        tips[_erc721Address] = 0;
+
+        require(tippingToken.transfer(msg.sender, amountToWithdraw), "Transfer failed");
+
+        emit Withdrawn(msg.sender, _erc721Address, amountToWithdraw);
+    }
+
+    function addUserTokenMapping(address[] memory _erc721Addresses, uint256[] memory _tokenIds) external {
+        require(_erc721Addresses.length == _tokenIds.length, "Arrays should have the same length");
+        require(_erc721Addresses.length > 0, "addresses array must be larger than 0");
+        require(_tokenIds.length > 0, "tokenIds array must be larger than 0");
+
+        delete userErc721Addresses[msg.sender];
+
+        for (uint256 i = 0; i < _erc721Addresses.length; i++) {
+            IERC721 erc721 = IERC721(_erc721Addresses[i]);
+            require(erc721.ownerOf(_tokenIds[i]) == msg.sender, "Caller must be the owner of the token");
+
+            userTokenMappings[msg.sender][_erc721Addresses[i]] = _tokenIds[i];
+            userErc721Addresses[msg.sender].push(_erc721Addresses[i]);
+        }
+    }
+
+    function getUserTokenMapping(address _userAddress) public view returns (address[] memory, uint256[] memory) {
+        address[] memory erc721Addresses = userErc721Addresses[_userAddress];
+        uint256[] memory tokenIds = new uint256[](erc721Addresses.length);
+
+        for (uint256 i = 0; i < erc721Addresses.length; i++) {
+            tokenIds[i] = userTokenMappings[_userAddress][erc721Addresses[i]];
+        }
+
+        return (erc721Addresses, tokenIds);
+    }
 }
