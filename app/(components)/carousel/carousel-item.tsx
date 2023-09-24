@@ -17,7 +17,7 @@ function CarouselItem({ title, placeholder, width, height, aspectRatio }: Carous
     <article className={`relative w-[${width}px] `}>
       <div className="overflow-hidden">
         <Image
-          src={placeholder || "https://pdtxar.com/wp-content/uploads/2019/11/video-placeholder-1280x720-40-768x433.jpg"}
+          src={placeholder || "https://pasteboard.co/7D3m4VuVicjj.png"}
           alt={title}
           priority={true}
           unoptimized={true}
