@@ -61,7 +61,7 @@ const IvsPlayer = () => {
     <div className="">
       <video
         className=""
-        poster="https://pdtxar.com/wp-content/uploads/2019/11/video-placeholder-1280x720-40-768x433.jpg"
+        poster="https://api.metafuse.me/assets/placeholder.jpeg"
         playsInline
         ref={videoPlayer}
         style={{ width: "100%", height: "100%" }}
