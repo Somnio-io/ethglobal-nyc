@@ -1,0 +1,12 @@
+{
+  "Ethereum": {
+    "TokenBalance": [
+      { "token": { "tokenTraits": { "Background": { "Black": 2 }, "Base": { "Steel": 2 }, "Pass": { "Metal": 2 }, "Tier": { "Three": 2 } } } }
+    ]
+  },
+  "Polygon": {
+    "TokenBalance": [
+      { "token": { "tokenTraits": { "Background": { "Black": 2 }, "Base": { "Steel": 2 }, "Pass": { "Metal": 2 }, "Tier": { "Three": 2 } } } }
+    ]
+  }
+}

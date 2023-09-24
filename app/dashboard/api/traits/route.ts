@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
 
     const listNftsForAddress = `query MyQuery {
       Ethereum: TokenBalances(
-        input: {filter: {tokenAddress: {_eq: "0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D"}, tokenType: {_eq: ERC721}}, blockchain: ethereum, limit: 50}
+        input: {filter: {tokenAddress: {_eq: "0x7d12d57e197f8b0d0eb5f878fb0dd7355a0d84f2"}, tokenType: {_eq: ERC721}}, blockchain: polygon, limit: 50}
       ) {
         TokenBalance {
           token {
@@ -81,7 +81,7 @@ export async function GET(request: NextRequest) {
         }
       }
       Polygon: TokenBalances(
-        input: {filter: {tokenAddress: {_eq: "0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D"}, tokenType: {_eq: ERC721}}, blockchain: polygon, limit: 50}
+        input: {filter: {tokenAddress: {_eq: "0x7d12d57e197f8b0d0eb5f878fb0dd7355a0d84f2"}, tokenType: {_eq: ERC721}}, blockchain: polygon, limit: 50}
       ) {
         TokenBalance {
           token {
@@ -93,7 +93,7 @@ export async function GET(request: NextRequest) {
     //console.log(listNftsForAddress);
 
     const { data, error } = await fetchQuery(listNftsForAddress);
-    console.log("Data / Error => ", data, error);
+    console.log("Data / Error => ", JSON.stringify(data), error);
     //console.log("Data", data.Ethereum.TokenBalance);
 
     let result: FormattedTraits = {};
