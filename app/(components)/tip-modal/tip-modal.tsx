@@ -109,13 +109,7 @@ export function TipModal({ target, usersWalletAddress }: any) {
           </div>
         </div>
         <DialogFooter>
-          <Button
-            variant="default"
-            className={`mr-2 h-4 w-4`}
-            type="submit"
-            onClick={() => (isApproved ? write?.() : approveSpend?.())}
-            disabled={isDisabled}
-          >
+          <Button variant="default" type="submit" onClick={() => (isApproved ? write?.() : approveSpend?.())} disabled={isDisabled}>
             {buttonText}
           </Button>
         </DialogFooter>
