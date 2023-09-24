@@ -76,7 +76,7 @@ function NavigationBase() {
           </a>
         </Link>
 
-        <Link href={`/dashboard/${account}`} legacyBehavior passHref>
+        <Link href={`/dashboard/${account}/test`} legacyBehavior passHref>
           <a aria-label="Settings" className="p-2 text-small flex flex-col items-center justify-center  hover:bg-pink-600 " aria-disabled={!isAuthed}>
             <GearIcon className="h-6 w-6 mb-0.5" />
             Settings
