@@ -17,7 +17,7 @@ function CarouselItem({ title, placeholder, width, height, aspectRatio }: Carous
     <article className={`relative w-[${width}px] `}>
       <div className="overflow-hidden">
         <Image
-          src={placeholder || "https://pasteboard.co/7D3m4VuVicjj.png"}
+          src={placeholder || "https://api.metafuse.me/assets/placeholder.jpeg"}
           alt={title}
           priority={true}
           unoptimized={true}
