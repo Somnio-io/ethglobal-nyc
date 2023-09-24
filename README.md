@@ -26,6 +26,10 @@ When thinking of how to best build Linkt.tv we wanted to ensure we stood on the 
 
 - https://onlyfrenz.metafuse.me/ (0x45a08295157432b83f08742a1c91c0009defc0f7) -> Owner 0x8c8117d3e0Ce36884bf611927F39af0f62138BeC
 
+# Etherscan Link
+
+- https://polygonscan.com/address/0x07F0c0C9eFC242FaD26Ab0e91e38ea3D73cBd267
+
 # Public URL
 
 - add this

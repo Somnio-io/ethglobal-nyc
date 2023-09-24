@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@airstack/node": "^0.0.4",
+    "@biconomy/account": "^3.1.0",
+    "@biconomy/bundler": "^3.1.0",
     "@biconomy/core-types": "^3.0.0",
     "@biconomy/paymaster": "^3.0.0",
     "@biconomy/smart-account": "^2.0.2",
