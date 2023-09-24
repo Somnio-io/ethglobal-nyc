@@ -36,7 +36,7 @@ For the best user experience its critical that a performant content delivery net
 
 - https://opensea.io/collection/onlyfrenz-1
 
-# Etherscan Link (Polygon, Scroll, Arbitrum)
+# Etherscan Link (Polygon, Scroll, Arbitrum, XDC mainnet)
 
 - https://polygonscan.com/address/0x07F0c0C9eFC242FaD26Ab0e91e38ea3D73cBd267
 - https://blockscout.scroll.io/address/0xa4CCeB9C8E614Ce30449Aa2c6850C56450249ea3
