@@ -4,7 +4,11 @@
 - bun/npm install
 - bun/npm run dev
 
-# Ok what the hell are we building?
+# What are we building?
+
+https://ethglobal.com/showcase/linkt-tv-bs3qt
+
+### Overview
 
 Linkt.tv allows content creators to connect with their fans and share unique video and live streaming experiences while allowing the market to determine the value of their content.
 
