@@ -113,7 +113,7 @@ export async function GET(request: NextRequest) {
     //console.log(listNftsForAddress);
 
     const { data, error } = await fetchQuery(listNftsForAddress);
-    console.log("Data / Error => ", data, error);
+    console.log("Data / Error => ", JSON.stringify(data), error);
     //console.log("Data", data.Ethereum.TokenBalance);
 
     let result: FormattedCollection = {};
