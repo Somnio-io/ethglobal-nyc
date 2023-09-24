@@ -26,8 +26,6 @@ async function getData() {
   });
   const jsonUrls = JSON.parse(await getUrls.json());
 
-  console.log(jsonUrls);
-
   const groupedContent = jsonUrls.presignedUrls.reduce((acc: { [key: string]: ContentKey[] }, curr: ContentKey) => {
     if (!acc[curr.id]) {
       acc[curr.id] = [];

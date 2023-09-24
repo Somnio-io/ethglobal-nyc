@@ -31,7 +31,7 @@ function CarouselBase({ name, content }: CarouselBaseProps) {
               >
                 <CarouselItem
                   key={`${_content.id} + ${i}`}
-                  title={_content.name}
+                  title={`${_content.name ? _content.name : "Unnamed"}`}
                   className="w-[150px]"
                   aspectRatio="portrait"
                   width={150}
