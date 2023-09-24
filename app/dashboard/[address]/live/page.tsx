@@ -4,13 +4,31 @@ import { AudienceSelector } from "@/(components)/audience-selector/audience-sele
 import { DefaultInput } from "@/(components)/input/default-input";
 import { Button } from "@/(components)/ui/button";
 import { EAudience, audiences } from "@/(components)/video/input-video-upload";
-import { LIVE_URL } from "@/(lib)/utils";
+import { useAuthContext } from "@/(context)/AuthContext";
+import { LINKT_ABI, LIVE_URL } from "@/(lib)/utils";
 import { useState } from "react";
+import { useContractWrite } from "wagmi";
 
 export default function Page({ params }: { params: { address: string } }) {
   const [streamName, setStreamName] = useState("");
+  const { connectedContract } = useAuthContext();
   const [streamDescription, setStreamDescription] = useState("");
   const [selectedAudience, setSelectedAudience] = useState(EAudience.ALL);
+
+  const { write } = useContractWrite({
+    address: process.env.NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS as `0x${string}`,
+    abi: LINKT_ABI,
+    functionName: "publishVideo",
+    args: [
+      44, // VideoId - always just increment what is existing
+      "someHash321",
+      connectedContract,
+      {
+        audienceType: audiences.indexOf(selectedAudience) + 1,
+        tokenId: 0, // Only for token publishing
+      },
+    ],
+  });
 
   return (
     <>
@@ -47,6 +65,7 @@ export default function Page({ params }: { params: { address: string } }) {
         className="mt-4"
         onClick={async () => {
           const token = localStorage.getItem("token");
+          write();
           const data = await fetch(
             `${LIVE_URL}`, // Its not the owners contract we care about, its the contract they own
             {
