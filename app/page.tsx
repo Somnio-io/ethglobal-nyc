@@ -17,7 +17,7 @@ export default async function Home() {
 async function getData() {
   const getUrls = await fetch(`${CONTENT_URL}`, {
     method: "GET",
-    next: { tags: ["discovery"], revalidate: 3600 }, // Every Hour - OR if someone uploads
+    next: { tags: ["discovery"], revalidate: 120 }, // 2 min - OR if someone uploads
     headers: {},
   });
   const jsonUrls = JSON.parse(await getUrls.json());
