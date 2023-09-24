@@ -3,7 +3,20 @@ import { connectorsForWallets, darkTheme, RainbowKitProvider } from "@rainbow-me
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
 // import { ChainId } from "@biconomy/core-types";
 // import SmartAccount from "@biconomy/smart-account";
-import { polygonMumbai, goerli, arbitrum, mainnet, optimism, polygon, gnosis, base } from "wagmi/chains";
+import {
+  polygonMumbai,
+  goerli,
+  arbitrum,
+  mainnet,
+  optimism,
+  polygon,
+  gnosis,
+  base,
+  xdc,
+  xdcTestnet,
+  scrollTestnet,
+  gnosisChiado,
+} from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 import { walletConnectWallet, rainbowWallet, metaMaskWallet } from "@rainbow-me/rainbowkit/wallets";
 import { rainbowWeb3AuthConnector } from "./Web3RainbowKitConnector";
@@ -22,6 +35,10 @@ const { chains, publicClient, webSocketPublicClient } = configureChains(
     optimism,
     gnosis,
     base,
+    xdc,
+    xdcTestnet,
+    scrollTestnet,
+    gnosisChiado,
     ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true" ? [goerli, polygonMumbai] : []),
   ],
   [publicProvider()]
