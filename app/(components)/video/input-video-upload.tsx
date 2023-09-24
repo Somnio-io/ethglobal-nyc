@@ -105,7 +105,6 @@ export function UploadVideo() {
     // Based on this publisher, look up their connected contract
     // Set state with that response setConnectedContract()
   }, []);
-  console.log(`The Deployed Contract is ${process.env.NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS}`);
 
   useContractRead({
     abi: LINKT_ABI,
@@ -164,7 +163,12 @@ export function UploadVideo() {
     console.log(videoPreSignedUrl);
 
     const videoPreSignedUrlData = JSON.parse(await videoPreSignedUrl.json());
-
+    try {
+      write?.(); // Publish Video content to contract
+    } catch (error) {
+      console.log(`Error!`, error);
+      return; // Return, dont continue to upload anything
+    }
     if (placeholderData.file) {
       const placeholderPresignUrl = await fetch(UPLOAD_URL, {
         method: "GET",
@@ -192,12 +196,6 @@ export function UploadVideo() {
       }
       console.log(response);
       if (response?.ok) {
-        try {
-          write?.(); // Publish Video content to contract
-        } catch (error) {
-          console.log(`Error!`, error);
-          return; // Return, dont continue to upload anything
-        }
         // After a successful video being published, remove the discovery cache
         const req = await fetch("/dashboard/api/revalidate?tag=discovery&secret=foobar", {
           method: "POST",
