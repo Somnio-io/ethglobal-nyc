@@ -69,7 +69,6 @@ export function TokenSelectorList({ account }: TokenSelectorListProps) {
       });
 
       if (data.ok) {
-        console.log("API: ", data);
         const jsonData = await data.json();
         setContent(jsonData.tokens);
       }
@@ -80,7 +79,8 @@ export function TokenSelectorList({ account }: TokenSelectorListProps) {
   }, []);
 
   useEffect(() => {
-    const formatted = Object.entries(content).map((item) => [[item[0]], [item[1].selected]]);
+    const formatted = [Object.keys(content), Object.values(content).map((item) => item.selected)];
+    console.log(formatted);
     setSaveSelection(formatted as any);
   }, [content]);
 
@@ -88,11 +88,11 @@ export function TokenSelectorList({ account }: TokenSelectorListProps) {
     address: process.env.NEXT_PUBLIC_FEATURE_DEPLOYED_CONTRACT_ADDRESS as `0x${string}`,
     abi: LINKT_ABI,
     functionName: "addUserTokenMapping",
-    args: saveSelection[0],
+    args: saveSelection,
   });
 
   const handleSave = () => {
-    console.log(saveSelection[0]);
+    console.log(saveSelection);
     write?.();
   };
 
@@ -103,9 +103,7 @@ export function TokenSelectorList({ account }: TokenSelectorListProps) {
     onSuccess(data: any) {
       console.log("DATAAAAA ::::", data);
       if (data[0].length && data[1].length) {
-        for (let i = 0; i < data[0].length; i++) {
-          content[data[0][i]].selected = data[1][i];
-        }
+        setSaveSelection(data);
       }
     },
     args: [account],
@@ -116,7 +114,7 @@ export function TokenSelectorList({ account }: TokenSelectorListProps) {
     return <p>Loading..</p>;
   }
 
-  console.log("Content => ", content);
+  console.log("Content => ", content, saveSelection);
 
   return (
     <>

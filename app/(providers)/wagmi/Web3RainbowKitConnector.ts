@@ -6,8 +6,7 @@ import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { TorusWalletConnectorPlugin } from "@web3auth/torus-wallet-connector-plugin";
 
 const name = "Linkt Login";
-const iconUrl =
-  "https://pbs.twimg.com/profile_images/1651688795429822464/cmDeEncE_400x400.jpg";
+const iconUrl = "https://pbs.twimg.com/profile_images/1651688795429822464/cmDeEncE_400x400.jpg";
 
 export const rainbowWeb3AuthConnector = ({ chains }: any) => {
   // Create Web3Auth Instance
@@ -22,8 +21,7 @@ export const rainbowWeb3AuthConnector = ({ chains }: any) => {
   };
 
   const web3AuthInstance = new Web3Auth({
-    clientId:
-      "BLnARNdBdBbMk-5xiFCf-4EYfvYnnMtVsHtt-rWyLl_-Yy8TYIkjPCNqlfrScHf25_MMbUQ4YURHvM2hKYEl6tQ",
+    clientId: "BLnARNdBdBbMk-5xiFCf-4EYfvYnnMtVsHtt-rWyLl_-Yy8TYIkjPCNqlfrScHf25_MMbUQ4YURHvM2hKYEl6tQ",
     chainConfig,
     uiConfig: {
       theme: { primary: "#00a8ff" },

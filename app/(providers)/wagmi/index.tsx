@@ -1,5 +1,5 @@
 import React from "react";
-import { connectorsForWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import { connectorsForWallets, darkTheme, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
 // import { ChainId } from "@biconomy/core-types";
 // import SmartAccount from "@biconomy/smart-account";
@@ -84,7 +84,9 @@ const wagmiConfig = createConfig({
 const WagmiProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <WagmiConfig config={wagmiConfig}>
-      <RainbowKitProvider chains={chains}>{children}</RainbowKitProvider>
+      <RainbowKitProvider theme={darkTheme({ accentColor: "#ff48a7" })} chains={chains}>
+        {children}
+      </RainbowKitProvider>
     </WagmiConfig>
   );
 };
