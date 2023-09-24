@@ -41,6 +41,7 @@ For the best user experience its critical that a performant content delivery net
 - https://polygonscan.com/address/0x07F0c0C9eFC242FaD26Ab0e91e38ea3D73cBd267
 - https://blockscout.scroll.io/address/0xa4CCeB9C8E614Ce30449Aa2c6850C56450249ea3
 - https://goerli.arbiscan.io/address/0xb11F270e3b77855F751ce9c70379CEf4965873Ab
+- https://explorer.xinfin.network/address/0x39A02239e680C35f4867BDc86a7771D74001CfBe#transactions
 
 # Overview (rough sketch)
 
