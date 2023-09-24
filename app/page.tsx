@@ -7,7 +7,11 @@ export default async function Home() {
 
   return (
     <>
-      <h1 className="text-3xl font-bold leading-tight tracking-tighter text-left my-12">Discover</h1>
+      <h1 className="text-3xl font-bold leading-tight tracking-tighter text-left my-4">Discover</h1>
+      <p className="text-muted-foreground mb- max-w-sm">
+        Find your favorite content creators on Linkt. Experience their exclusive, token-gated content and unique live streams firsthand.
+      </p>
+
       <CarouselBase name="Trending" content={content} />
       <CarouselBase name="New Content" content={content.reverse()} />
     </>

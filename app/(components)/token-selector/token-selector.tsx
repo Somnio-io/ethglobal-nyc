@@ -4,6 +4,7 @@ import { Checkbox } from "../ui/checkbox";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { useState } from "react";
 import { FormattedToken } from "@/dashboard/api/tokens/route";
+import DefaultLoader from "../loader/default-loader";
 
 export function TokenSelector(tokens: any[]) {
   const [selected, setSelected] = useState<FormattedToken>();
@@ -12,7 +13,7 @@ export function TokenSelector(tokens: any[]) {
   //console.log("Collection =>", _tokens)
 
   if (!_tokens) {
-    return <p>Loading...</p>;
+    return <DefaultLoader />;
   }
 
   if (!_tokens.length) return null;

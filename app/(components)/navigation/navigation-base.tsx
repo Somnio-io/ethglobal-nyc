@@ -6,6 +6,7 @@ import { useAuthContext } from "@/(context)/AuthContext";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Popover, PopoverContent, PopoverTrigger } from "@/(components)/ui/popover";
+import DefaultLoader from "../loader/default-loader";
 
 function NavigationBase() {
   const router = useRouter();
@@ -49,7 +50,7 @@ function NavigationBase() {
   };
 
   if (!signIn || !signOut) {
-    return <p>Loading...</p>;
+    return <DefaultLoader />;
   }
 
   return (

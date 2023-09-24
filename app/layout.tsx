@@ -8,13 +8,14 @@ import ConnectWallet from "@/wallet";
 import Script from "next/script";
 import NavigationBase from "./(components)/navigation/navigation-base";
 import Link from "next/link";
+import DefaultLoader from "./(components)/loader/default-loader";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <Script src="https://player.live-video.net/1.21.0/amazon-ivs-player.min.js" />
 
-      <body className="relative flex flex-col">
+      <body className="relative flex flex-col bg-no-repeat bg-center bg-cover bg-[url('/bg-img.jpg')] ">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <RootProvider>
             <header className="w-full flex justify-between  px-4 py-8 overflow-hidden">

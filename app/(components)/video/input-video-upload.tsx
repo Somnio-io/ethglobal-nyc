@@ -13,6 +13,7 @@ import SparkMD5 from "spark-md5";
 import { ProgressBar } from "../progress/progress-bar";
 import { useContractRead, useContractWrite } from "wagmi";
 import { useRouter } from "next/navigation";
+import DefaultLoader from "../loader/default-loader";
 
 async function calculateMD5(file: File): Promise<string> {
   return new Promise<string>((resolve, reject) => {
@@ -213,7 +214,7 @@ export function UploadVideo() {
   };
 
   if (loading) {
-    return <p>Loading..</p>;
+    return <DefaultLoader />;
   }
 
   return (

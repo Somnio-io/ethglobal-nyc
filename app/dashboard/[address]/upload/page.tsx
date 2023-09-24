@@ -1,6 +1,7 @@
 "use client";
 
 import ContractLink from "@/(components)/contract-link/contract-link";
+import DefaultLoader from "@/(components)/loader/default-loader";
 import { UploadVideo } from "@/(components)/video/input-video-upload";
 import { User } from "@/(context)/AuthContext";
 import { USER_URL } from "@/(lib)/utils";
@@ -49,7 +50,7 @@ export default function Page({ params }: { params: { address: string } }) {
   );
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <DefaultLoader />;
   }
 
   return (

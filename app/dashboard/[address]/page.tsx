@@ -8,6 +8,7 @@ import { TokenSelectorList } from "@/(components)/token-selector-list/token-sele
 import { useContractRead, useContractWrite } from "wagmi";
 import { useAuthContext } from "@/(context)/AuthContext";
 import { Button } from "@/(components)/ui/button";
+import DefaultLoader from "@/(components)/loader/default-loader";
 
 export default function Page({ params }: { params: { address: string } }) {
   const [content, setContent] = useState<Video[]>([]);
@@ -67,7 +68,7 @@ export default function Page({ params }: { params: { address: string } }) {
   }, []);
 
   if (loading && !content.length) {
-    return <p>Loading..</p>;
+    return <DefaultLoader />;
   }
 
   return (

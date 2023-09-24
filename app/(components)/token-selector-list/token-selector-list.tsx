@@ -6,6 +6,7 @@ import { useContractRead, useContractWrite, usePrepareContractWrite } from "wagm
 import { LINKT_ABI } from "@/(lib)/utils";
 import { FormattedCollection, FormattedToken } from "@/dashboard/api/tokens/route";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import DefaultLoader from "../loader/default-loader";
 
 interface TokenSelectorListProps {
   account: string;
@@ -111,7 +112,7 @@ export function TokenSelectorList({ account }: TokenSelectorListProps) {
   }) as any;
 
   if (loading) {
-    return <p>Loading..</p>;
+    return <DefaultLoader />;
   }
 
   console.log("Content => ", content, saveSelection);
