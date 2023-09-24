@@ -8,7 +8,6 @@ import { TokenSelectorList } from "@/(components)/token-selector-list/token-sele
 import { useContractRead, useContractWrite } from "wagmi";
 import { useAuthContext } from "@/(context)/AuthContext";
 import { Button } from "@/(components)/ui/button";
-import DefaultLoader from "@/(components)/loader/default-loader";
 
 export default function Page({ params }: { params: { address: string } }) {
   const [content, setContent] = useState<Video[]>([]);
@@ -68,7 +67,7 @@ export default function Page({ params }: { params: { address: string } }) {
   }, []);
 
   if (loading && !content.length) {
-    return <DefaultLoader />;
+    return <p>Loading..</p>;
   }
 
   return (
@@ -85,8 +84,8 @@ export default function Page({ params }: { params: { address: string } }) {
               <p className="text-2xl font-bold tracking-tight text-primary"> 12 </p>
             </article>
             <article className="col-start-3 col-span-2 p-4  border-2 h-28 space-y-6">
-              <h3 className="text-base font-medium tracking-tight ">Watch hours</h3>
-              <p className="text-2xl font-bold tracking-tight text-primary"> +20 </p>
+              <h3 className="text-base font-medium tracking-tight ">Weekly Watch hours</h3>
+              <p className="text-2xl font-bold tracking-tight text-primary">26 </p>
             </article>
             <article className="col-start-1 col-span-4 p-4  border-2  h-32 space-y-6">
               <div className="flex justify-between">
@@ -98,8 +97,6 @@ export default function Page({ params }: { params: { address: string } }) {
 
               <p className="text-2xl font-bold tracking-tight text-primary">{tipAmount} USDC</p>
             </article>
-
-            {/* <CarouselBase name="Trending" content={[]} /> */}
           </div>
           <CarouselBase name="My Content" content={content} />
         </>

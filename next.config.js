@@ -28,7 +28,7 @@ const deployedContractAddress = {
 };
 
 const deployedContract = "0x07F0c0C9eFC242FaD26Ab0e91e38ea3D73cBd267";
-const currentNodeEndpoint = "";
+const currentNodeEndpoint = "POLYGON";
 
 console.log(`Contract is -> ${deployedContract}`);
 console.log(`Endpoint is -> ${currentNodeEndpoint}`);

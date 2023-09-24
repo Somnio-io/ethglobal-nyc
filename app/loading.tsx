@@ -5,7 +5,7 @@ export default function Loading() {
   return (
     <main className="h-full flex flex-col items-center">
       <svg className="animate-spin h-5 w-5 mr-3 ..." viewBox="0 0 24 24"></svg>
-      Processing...
+      Loading...
     </main>
   );
 }

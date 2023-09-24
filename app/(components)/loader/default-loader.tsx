@@ -35,7 +35,7 @@ export default function DefaultLoader() {
     <div className="fixed top-0 left-0 w-full h-full bg-primary/10 backdrop-blur-md flex justify-center items-center z-90">
       <div className="text-center">
         <Loader2 className="mx-auto h-4 w-4 animate-spin" />
-        <p className={`mt-4 text-white transition-opacity duration-500 ${fadeIn ? "opacity-100" : "opacity-0"}`}>{facts[currentIndex]}</p>
+        {/* <p className={`mt-4 text-white transition-opacity duration-500 ${fadeIn ? "opacity-100" : "opacity-0"}`}></p> */}
       </div>
     </div>
   );
