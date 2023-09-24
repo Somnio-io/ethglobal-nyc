@@ -119,19 +119,23 @@ export function TokenSelectorList({ account }: TokenSelectorListProps) {
 
   return (
     <>
-      <div className={`max-h-[225px] overflow-y-scroll`}>
+      <span className="mb-6 text-2xl text-center">Content Selector</span>
+      <div className={`flex flex-col gap-2 max-h-[225px] overflow-y-scroll items-center`}>
         {Object.values(content).length
           ? Object.values(content).map((tokens, i) => (
               <div
                 key={tokens.tokens[0].address}
-                className={`flex items-center gap-10 hover:opacity-50 h-[50px] cursor-pointer stroke-primary stroke-2 bg-transparent border ${
+                className={`flex items-center rounded-md gap-10 hover:opacity-50 h-[50px] w-3/4 cursor-pointer stroke-primary stroke-2 bg-transparent border ${
                   tokens.selected !== "" ? "border-green-500" : "border-red-500"
                 }`}
               >
                 <DropdownMenu>
-                  <DropdownMenuTrigger className={`w-full m-5`} asChild>
+                  <DropdownMenuTrigger className={`flex justify-between w-full m-5`} asChild>
                     <span>
-                      {tokens.tokens[0].name} {tokens.selected}
+                      {tokens.tokens[0].name}
+                      {tokens.selected ? (
+                        <Image unoptimized={true} src={tokens.tokens[0].thumbnail} height={40} width={40} alt={tokens.tokens[0].name} />
+                      ) : null}
                     </span>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
@@ -160,9 +164,11 @@ export function TokenSelectorList({ account }: TokenSelectorListProps) {
             ))
           : null}
       </div>
-      <button className="mt-5 border border-white h-[50px]" onClick={() => handleSave()}>
-        SAVE
-      </button>
+      <div className="flex flex-col w-full items-center">
+        <button className="w-1/4 mt-32 border rounded-md border-white h-[50px]" onClick={() => handleSave()}>
+          SAVE
+        </button>
+      </div>
     </>
   );
 }
