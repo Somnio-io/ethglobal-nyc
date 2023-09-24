@@ -15,7 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <Script src="https://player.live-video.net/1.21.0/amazon-ivs-player.min.js" />
 
-      <body className="relative flex flex-col bg-no-repeat bg-center bg-cover bg-[url('/bg-img.jpg')] ">
+      <body className="relative flex flex-col  bg-center bg-repeat-y bg-[url('/bg-img.jpg')] ">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <RootProvider>
             <header className="w-full flex justify-between  px-4 py-8 overflow-hidden">
