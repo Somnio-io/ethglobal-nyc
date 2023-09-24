@@ -18,6 +18,7 @@ const config: HardhatUserConfig = {
   etherscan: {
     apiKey: {
       polygon: "GVDWA4N8Q3WXAVW7AVSDQNHQ4XGD4YJKZZ",
+      scrollAlpha: "abc",
     },
   },
   networks: {
@@ -31,6 +32,18 @@ const config: HardhatUserConfig = {
     },
     maticTestnet: {
       url: process.env.MATIC_TESTNET || "",
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
+    arbitrumTestnet: {
+      url: process.env.ARBITRUM_TESTNET || "",
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
+    gnosisTestnet: {
+      url: process.env.GNOSIS_TESTNET || "",
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
+    "base-goerli": {
+      url: process.env.BASE_TESTNET || "",
       accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
     // Mainnets

@@ -26,9 +26,11 @@ For the best user experience its critical that a performant content delivery net
 
 - https://onlyfrenz.metafuse.me/ (0x45a08295157432b83f08742a1c91c0009defc0f7) -> Owner 0x8c8117d3e0Ce36884bf611927F39af0f62138BeC
 
-# Etherscan Link
+# Etherscan Link (Polygon, Scroll, Arbitrum)
 
 - https://polygonscan.com/address/0x07F0c0C9eFC242FaD26Ab0e91e38ea3D73cBd267
+- https://blockscout.scroll.io/address/0xa4CCeB9C8E614Ce30449Aa2c6850C56450249ea3
+- https://goerli.arbiscan.io/address/0xb11F270e3b77855F751ce9c70379CEf4965873Ab
 
 # Public URL
 

@@ -11,7 +11,7 @@ async function main() {
   const Linkt = await ethers.getContractFactory("Linkt");
   // Requires the tip token to be passed in during deployment
 
-  const USDC = "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174";
+  const USDC = "0xa0d71b9877f44c744546d649147e3f1e70a93760";
   linkt = await Linkt.deploy(USDC);
   await linkt.deployed();
   console.log(`Linkt Deployed to -> ${linkt.address}`);
