@@ -126,7 +126,7 @@ export function TokenSelectorList({ account }: TokenSelectorListProps) {
               <div
                 key={tokens.tokens[0].address}
                 className={`flex items-center rounded-md gap-10 hover:opacity-50 h-[50px] w-3/4 cursor-pointer stroke-primary stroke-2 bg-transparent border ${
-                  tokens.selected !== "" ? "border-green-500" : "border-red-500"
+                  tokens.selected !== "" ? "border-green-500" : "border-white"
                 }`}
               >
                 <DropdownMenu>
