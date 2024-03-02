@@ -17,7 +17,7 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: {
-      polygon: "GVDWA4N8Q3WXAVW7AVSDQNHQ4XGD4YJKZZ",
+      polygon: "",
       scrollAlpha: "abc",
     },
   },
